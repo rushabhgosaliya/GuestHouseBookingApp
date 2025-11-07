@@ -1,7 +1,9 @@
 import React from "react";
-import Navbar from "../../user/components/UserNav";
 import GuestHouseCard from "../../user/components/GuestHouseCard";
 import BookingForm from "../../user/components/BookingForm";
+import Navbar from "../../user/components/Navbar";
+import { Footer } from "../components/Footer";
+
 
 export default function UserDashboard() {
   return (
@@ -12,7 +14,7 @@ export default function UserDashboard() {
       }}
     >
       {/* Fixed Navbar */}
-      <Navbar/>
+     <Navbar/>
 
       {/* Page Content */}
       <div style={{ paddingTop: "100px", padding: "20px" }}>
@@ -23,6 +25,9 @@ export default function UserDashboard() {
           <BookingForm />
         </div> */}
       </div>
+      <Footer/>
     </div>
   );
 }
+
+

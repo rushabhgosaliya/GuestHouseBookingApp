@@ -1,10 +1,13 @@
 import mongoose from "mongoose";
+import AutoIncrementFactory from "mongoose-sequence";
+
+const connection = mongoose.connection;
+const AutoIncrement = AutoIncrementFactory(connection);
 
 const roomSchema = new mongoose.Schema(
   {
     roomId: {
-      type: String,
-      required: true,
+      type: Number,
       unique: true,
     },
     guesthouseId: {
@@ -36,5 +39,7 @@ const roomSchema = new mongoose.Schema(
   },
   { timestamps: true }
 );
+
+roomSchema.plugin(AutoIncrement, { inc_field: "roomId" });
 
 export default mongoose.model("room", roomSchema);
