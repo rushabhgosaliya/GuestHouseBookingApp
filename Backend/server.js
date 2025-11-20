@@ -9,7 +9,9 @@ import adminRoutes from './models/createAdmin.js'
 import adminroutes from "./routes/adminRoutes.js";
 import guestHouseRoutes from "./routes/guestHouseRoutes.js";
 import roomRoutes from "./routes/roomRoutes.js";
-
+import bedRoutes from "./routes/bedRoutes.js";
+import userRoutes from "./routes/userRoute.js";
+import bookingRoutes from "./routes/bookingRoutes.js";
 
 
 // Load .env file
@@ -50,6 +52,12 @@ app.use("/api/admin", adminroutes);
 app.use("/api/guesthouses", guestHouseRoutes);
 
 app.use("/api/rooms", roomRoutes);
+
+app.use("/api/beds",bedRoutes);
+
+app.use("/api/users", userRoutes);
+
+app.use("/api/bookings", bookingRoutes);
 
 // Start Server
 const PORT = process.env.PORT_NUMBER || 5000;

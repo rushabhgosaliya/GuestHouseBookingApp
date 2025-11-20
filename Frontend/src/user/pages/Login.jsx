@@ -1,12 +1,14 @@
-import React from "react";
+import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import axios from "axios";
 import { ToastContainer, toast } from "react-toastify";
+import { FaEye, FaEyeSlash } from "react-icons/fa";
 import "react-toastify/dist/ReactToastify.css";
 
 export default function Login() {
   const navigate = useNavigate();
+  const [showPassword, setShowPassword] = useState(false); // 👈 added
 
   const {
     register,
@@ -59,8 +61,7 @@ export default function Login() {
               {...register("email", {
                 required: "Email is required",
                 pattern: {
-                  value:
-                    /^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$/,
+                  value: /^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$/,
                   message: "Invalid email address",
                 },
               })}
@@ -78,10 +79,10 @@ export default function Login() {
           </div>
 
           {/* Password Field */}
-          <div className="flex flex-col">
+          <div className="flex flex-col relative">
             <label className="mb-1 font-medium text-[#4C5C68]">Password</label>
             <input
-              type="password"
+              type={showPassword ? "text" : "password"} // 👈 toggled visibility
               placeholder="Enter your password"
               {...register("password", {
                 required: "Password is required",
@@ -93,6 +94,14 @@ export default function Login() {
                   : "border-black focus:border-blue-500 focus:shadow-[0_0_0_2px_rgba(59,130,246,0.25)]"
               }`}
             />
+            {/* 👇 Your provided eye toggle span */}
+            <span
+              className="absolute right-4 inset-y-0 flex items-center text-gray-500 cursor-pointer text-lg hover:text-blue-500" style={{marginTop:"30px"}}
+              onClick={() => setShowPassword(!showPassword)}
+            >
+              {showPassword ? <FaEyeSlash /> : <FaEye />}
+            </span>
+
             {errors.password && (
               <span className="text-red-500 text-sm mt-1">
                 {errors.password.message}

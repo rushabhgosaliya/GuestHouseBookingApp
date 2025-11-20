@@ -59,7 +59,7 @@ export default function Register() {
             className="w-full flex flex-col gap-4"
           >
             {/* Name Fields */}
-            <div className="flex flex-row gap-4 max-sm:flex-col">
+            <div className="flex flex-row  gap-4 max-sm:flex-col">
               <div className="flex-1 flex flex-col">
                 <label className="text-[#4C5C68] font-medium mb-1">
                   First Name
@@ -68,7 +68,7 @@ export default function Register() {
                   type="text"
                   placeholder="First Name"
                   {...register("firstName", { required: "First name is required" })}
-                  className="w-full px-4 py-3 border border-black rounded-xl outline-none text-gray-800 text-base focus:border-blue-500 focus:ring-2 focus:ring-blue-300"
+                  className="w-full px-4 py-3 border  border-gray-300 shadow-sm  rounded-xl outline-none text-gray-800 text-base focus:border-blue-500 focus:ring-2 focus:ring-blue-300"
                 />
                 {errors.firstName && (
                   <span className="text-red-400 text-sm mt-1">
@@ -85,7 +85,7 @@ export default function Register() {
                   type="text"
                   placeholder="Last Name"
                   {...register("lastName", { required: "Last name is required" })}
-                  className="w-full px-4 py-3 border border-black rounded-xl outline-none text-gray-800 text-base focus:border-blue-500 focus:ring-2 focus:ring-blue-300"
+                  className="w-full px-4 py-3 border  border-gray-300 shadow-sm  rounded-xl outline-none text-gray-800 text-base focus:border-blue-500 focus:ring-2 focus:ring-blue-300"
                 />
                 {errors.lastName && (
                   <span className="text-red-400 text-sm mt-1">
@@ -103,7 +103,7 @@ export default function Register() {
                   type="email"
                   placeholder="Email"
                   {...register("email", { required: "Email is required" })}
-                  className="w-full px-4 py-3 border border-black rounded-xl outline-none text-gray-800 text-base focus:border-blue-500 focus:ring-2 focus:ring-blue-300"
+                  className="w-full px-4 py-3 border  border-gray-300 shadow-sm rounded-xl outline-none text-gray-800 text-base focus:border-blue-500 focus:ring-2 focus:ring-blue-300"
                 />
                 {errors.email && (
                   <span className="text-red-400 text-sm mt-1">
@@ -124,7 +124,7 @@ export default function Register() {
                       message: "Phone number must be 10 digits",
                     },
                   })}
-                  className="w-full px-4 py-3 border border-black rounded-xl outline-none text-gray-800 text-base focus:border-blue-500 focus:ring-2 focus:ring-blue-300"
+                  className="w-full px-4 py-3 border  border-gray-300 shadow-sm  rounded-xl outline-none text-gray-800 text-base focus:border-blue-500 focus:ring-2 focus:ring-blue-300"
                 />
                 {errors.phoneNo && (
                   <span className="text-red-400 text-sm mt-1">
@@ -141,7 +141,7 @@ export default function Register() {
                 placeholder="Address"
                 {...register("address")}
                 rows={2}
-                className="w-full px-4 py-3 border border-black rounded-xl outline-none text-gray-800 text-base focus:border-blue-500 focus:ring-2 focus:ring-blue-300"
+                className="w-full px-4 py-3 border  border-gray-300 shadow-sm  rounded-xl outline-none text-gray-800 text-base focus:border-blue-500 focus:ring-2 focus:ring-blue-300"
               />
             </div>
 
@@ -159,7 +159,7 @@ export default function Register() {
                       required: "Password is required",
                       minLength: { value: 6, message: "Min 6 chars" },
                     })}
-                    className="w-full px-4 py-3 pr-10 border border-black rounded-xl outline-none text-gray-800 text-base focus:border-blue-500 focus:ring-2 focus:ring-blue-300"
+                    className="w-full px-4 py-3 pr-10 border  border-gray-300 shadow-sm  rounded-xl outline-none text-gray-800 text-base focus:border-blue-500 focus:ring-2 focus:ring-blue-300"
                   />
                   <span
                     className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 cursor-pointer text-lg hover:text-blue-500"
@@ -186,7 +186,7 @@ export default function Register() {
                     {...register("confirmPassword", {
                       required: "Confirm your password",
                     })}
-                    className="w-full px-4 py-3 pr-10 border border-black rounded-xl outline-none text-gray-800 text-base focus:border-blue-500 focus:ring-2 focus:ring-blue-300"
+                    className="w-full px-4 py-3 pr-10 border  border-gray-300 shadow-sm  rounded-xl outline-none text-gray-800 text-base focus:border-blue-500 focus:ring-2 focus:ring-blue-300"
                   />
                   <span
                     className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 cursor-pointer text-lg hover:text-blue-500"

@@ -6,11 +6,12 @@ import Register from "./user/pages/Register";
 import UserDashboard from "./user/pages/UserDashboard";
 import ForgotPassword from "./user/pages/ForgotPassword";
 import ResetPassword from "./user/pages/ResetPassword";
-import BookingForm from "./user/components/BookingForm";
+import BookingForm from "./user/pages/BookingForm";
 import ProtectedRoute from "./routes/ProtectedRoute";
 import AdminDashboard from "./admin/pages/AdminDashboard";
 import Index from "./user/pages/Index";
 import Profile from "./user/pages/Profile";
+import MyBookings from "./user/pages/MyBookings";
 
 
 export default function App() {
@@ -24,7 +25,7 @@ export default function App() {
       <Route path="/reset-password" element={<ResetPassword />} />
       <Route path="/Home" element={<Index />} />
       <Route path="/profile" element={<Profile />} />
-
+      
       
 
 
@@ -42,6 +43,14 @@ export default function App() {
         element={
           <ProtectedRoute>
             <BookingForm />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/mybookings"
+        element={
+          <ProtectedRoute>
+            <MyBookings />
           </ProtectedRoute>
         }
       />

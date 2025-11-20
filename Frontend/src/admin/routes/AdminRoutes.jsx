@@ -5,6 +5,9 @@ import Dashboard from "../components/MainBody";
 import RecentBooking from "../components/RecentBooking";
 import GuestHouses from "../pages/GuestHouses";
 import RoomsManagement from "../pages/RoomsManagement";
+import BedManagement from "../pages/BedManagement"
+import UserManagement from "../pages/UserManagement";
+
 
 const BookingManagement = () => (
   <div className="p-8">
@@ -12,6 +15,13 @@ const BookingManagement = () => (
     <p className="text-gray-600 mt-4">Manage all guest bookings here.</p>
   </div>
 );
+
+// const UserManagement = () => (
+//   <div className="p-8">
+//     <h2 className="text-2xl font-semibold text-gray-800">User Management</h2>
+//     <p className="text-gray-600 mt-4">Manage all registered users here.</p>
+//   </div>
+// );
 
 // const GuestHouses = () => (
 //   <div className="p-8">
@@ -27,12 +37,12 @@ const BookingManagement = () => (
 //   </div>
 // );
 
-const Beds = () => (
-  <div className="p-8">
-    <h2 className="text-2xl font-semibold text-gray-800">Bed Management</h2>
-    <p className="text-gray-600 mt-4">Manage rooms and bed allocations here.</p>
-  </div>
-);
+// const Beds = () => (
+//   <div className="p-8">
+//     <h2 className="text-2xl font-semibold text-gray-800">Bed Management</h2>
+//     <p className="text-gray-600 mt-4">Manage rooms and bed allocations here.</p>
+//   </div>
+// );
 
 const Notifications = () => (
   <div className="p-8">
@@ -50,12 +60,13 @@ const AuditLogs = () => (
 
 const AdminRoutes = () => {
   return (
-    <Routes>
+    <Routes>z
       <Route path="/dashboard" element={<Dashboard />} />
       <Route path="/bookings" element={<BookingManagement />} />
+      <Route path="/users" element={<UserManagement/>} />
       <Route path="/guesthouses" element={<GuestHouses/>} />
       <Route path="/rooms" element={<RoomsManagement/>} />
-      <Route path="/beds" element={<Beds />} />
+      <Route path="/beds" element={<BedManagement />} />
       <Route path="/notifications" element={<Notifications />} />
       <Route path="/audit-logs" element={<AuditLogs />} />
       <Route path="/recent-bookings" element={<RecentBooking />} />

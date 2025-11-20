@@ -2,11 +2,6 @@ import mongoose from "mongoose";
 
 const bedSchema = new mongoose.Schema(
   {
-    bedId: {
-      type: String,
-      required: true,
-      unique: true,
-    },
     roomId: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "room",
@@ -16,9 +11,10 @@ const bedSchema = new mongoose.Schema(
       type: Number,
       required: true,
     },
-    image_url: {
+    bedType:{
       type: String,
-      required: true,
+      enum:["single","double","suit"],
+      required:true,
     },
     isAvailable: {
       type: Boolean,

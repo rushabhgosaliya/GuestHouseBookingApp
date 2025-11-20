@@ -9,6 +9,7 @@ import {
   MdAssignment,
   MdMenu,
   MdClose,
+  MdPeople, // 👈 Added icon for User Management
 } from "react-icons/md";
 
 const AdminSidebar = () => {
@@ -27,6 +28,11 @@ const AdminSidebar = () => {
       name: "Booking Management",
       icon: <MdAssignment size={20} />,
       path: "/admin/bookings",
+    },
+    {
+      name: "User Management", // 👈 New menu item added here
+      icon: <MdPeople size={20} />,
+      path: "/admin/users",
     },
     {
       name: "Guest Houses",
@@ -65,7 +71,7 @@ const AdminSidebar = () => {
 
       {/* Sidebar */}
       <div
-        className={`fixed md:static z-40 w-auto top- left-0 h-screen bg-gradient-to-b from-blue-700 to-blue-900 text-white shadow-lg p-5 pt-8 duration-300 
+        className={`fixed md:static z-40 w-auto left-0 h-screen bg-gradient-to-b from-blue-700 to-blue-900 text-white shadow-lg p-5 pt-8 duration-300 
         ${isOpen ? "w-64" : "w-20"} 
         ${isOpen ? "translate-x-0" : "-translate-x-full md:translate-x-0"}`}
       >
@@ -78,7 +84,8 @@ const AdminSidebar = () => {
         </button>
 
         {/* Logo / Title */}
-        <h1 style={{marginLeft:"20px"}}
+        <h1
+          style={{ marginLeft: "20px" }}
           className={`text-2xl font-bold tracking-wide text-white mb-10 transition-all duration-300 ${
             !isOpen && "hidden"
           }`}
@@ -115,25 +122,6 @@ const AdminSidebar = () => {
           onClick={() => setIsOpen(false)}
         ></div>
       )}
-
-      {/* Main Content Area */}
-      <div
-        // className="flex-1 p-8 mt-16 md:ml-0 transition-all duration-300"
-        // style={{
-        //   background:
-        //     "linear-gradient(to bottom right, #f5f5f5, #d5dbdb, #e5e7eb)",
-        // }}
-      >
-        {/* <div className="bg-white shadow-md rounded-2xl p-6">
-          <h2 className="text-3xl font-semibold text-blue-800 mb-4">
-            Admin Dashboard
-          </h2>
-          <p className="text-gray-600 mt-8">
-            Welcome to the admin panel! Manage guest houses, bookings, and
-            system operations here.
-          </p>
-        </div> */}
-      </div>
     </div>
   );
 };

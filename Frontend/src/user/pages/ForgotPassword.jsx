@@ -44,7 +44,7 @@ export default function ForgotPassword() {
               required
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              className="w-full px-4 py-3 border border-black rounded-lg outline-none text-[#1F2937] border-[#D1D5DB]/40 focus:ring-2 focus:ring-[#3B82F6]"
+              className="w-full px-4 py-3 border  border-gray-300 shadow-sm rounded-lg outline-none text-[#1F2937] border-[#D1D5DB]/40 focus:ring-2 focus:ring-[#3B82F6]"
             />
           </div>
 

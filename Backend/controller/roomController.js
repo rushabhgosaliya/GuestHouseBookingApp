@@ -19,6 +19,22 @@ export const getAllRooms = async (req,res)=>{
     }
 };
 
+// ✅ Get rooms by Guest House ID
+export const getRoomsByGuestHouse = async (req, res) => {
+  try {
+    const { guesthouseId } = req.query;
+    if (!guesthouseId) return res.status(400).json({ message: "Guesthouse ID required" });
+
+    const rooms = await Room.find({ guesthouseId }).populate("guesthouseId", "guestHouseName location");
+    if (!rooms.length) return res.status(404).json({ message: "No rooms found for this guesthouse" });
+
+    res.status(200).json(rooms);
+  } catch (error) {
+    res.status(500).json({ message: "Error fetching rooms by guesthouse", error: error.message });
+  }
+};
+
+
 export const getRoomById = async (req, res) => {
   try {
     const room = await Room.findById(req.params.id).populate("guesthouseId", "guestHouseName location");
