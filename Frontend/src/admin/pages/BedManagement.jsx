@@ -1,5 +1,13 @@
 import React, { useState, useEffect } from "react";
-import { Plus, Edit, Trash2, CheckCircle, XCircle, BedDouble } from "lucide-react";
+import {
+  Plus,
+  Edit,
+  Trash2,
+  CheckCircle,
+  XCircle,
+  BedDouble,
+} from "lucide-react";
+import { PlusCircle } from "lucide-react";
 import axios from "axios";
 
 const BedManagement = () => {
@@ -14,7 +22,7 @@ const BedManagement = () => {
     isAvailable: true,
   });
 
-  // Fetch beds + rooms from backend
+  // Fetch beds + rooms
   useEffect(() => {
     fetchBeds();
     fetchRooms();
@@ -58,10 +66,14 @@ const BedManagement = () => {
             ? formData.roomId._id
             : formData.roomId,
         bednumber: Number(formData.bednumber),
+        bedType: "single", // ALWAYS single
       };
 
       if (editingBed) {
-        await axios.put(`http://localhost:5000/api/beds/${editingBed._id}`, payload);
+        await axios.put(
+          `http://localhost:5000/api/beds/${editingBed._id}`,
+          payload
+        );
       } else {
         await axios.post("http://localhost:5000/api/beds", payload);
       }
@@ -79,6 +91,7 @@ const BedManagement = () => {
     setEditingBed(bed);
     setFormData({
       ...bed,
+      bedType: "single", // FORCE single for edit
       roomId: typeof bed.roomId === "object" ? bed.roomId._id : bed.roomId,
     });
     setShowModal(true);
@@ -99,8 +112,9 @@ const BedManagement = () => {
       {/* Header */}
       <div className="flex justify-between items-center mb-8">
         <h1 className="text-3xl font-semibold text-gray-800 flex items-center gap-2">
-          <BedDouble className="text-blue-600" /> Bed Management
+      Bed Management
         </h1>
+
         <button
           onClick={() => {
             setFormData({
@@ -112,9 +126,9 @@ const BedManagement = () => {
             setEditingBed(null);
             setShowModal(true);
           }}
-          className="flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg shadow-md transition-all"
+          className="flex items-center gap-2 bg-blue-800 hover:bg-blue-700 text-white px-4 py-2 rounded-lg shadow-md transition-all"
         >
-          <Plus size={18} /> Add Bed
+         <PlusCircle size={18} />   Add Bed
         </button>
       </div>
 
@@ -123,7 +137,7 @@ const BedManagement = () => {
         <table className="w-full border-collapse">
           <thead>
             <tr className="bg-gray-100 text-gray-700">
-              <th className="py-3 px-4 text-left">#</th>
+              <th className="py-3 px-4 text-left">bedId</th>
               <th className="py-3 px-4 text-left">Room</th>
               <th className="py-3 px-4 text-left">Bed No.</th>
               <th className="py-3 px-4 text-left">Type</th>
@@ -133,7 +147,10 @@ const BedManagement = () => {
           </thead>
           <tbody>
             {beds.map((bed, index) => (
-              <tr key={bed._id} className="border-b hover:bg-gray-50 transition">
+              <tr
+                key={bed._id}
+                className="border-b hover:bg-gray-50 transition"
+              >
                 <td className="py-3 px-4">{index + 1}</td>
                 <td className="py-3 px-4">
                   {bed.roomId?.roomNumber
@@ -141,7 +158,8 @@ const BedManagement = () => {
                     : "N/A"}
                 </td>
                 <td className="py-3 px-4">{bed.bednumber}</td>
-                <td className="py-3 px-4 capitalize">{bed.bedType}</td>
+                <td className="py-3 px-4 capitalize">single</td>{" "}
+                {/* ALWAYS Single */}
                 <td className="py-3 px-4 text-center">
                   {bed.isAvailable ? (
                     <CheckCircle className="text-green-500 inline" />
@@ -152,15 +170,16 @@ const BedManagement = () => {
                 <td className="py-3 px-4 flex justify-center gap-3">
                   <button
                     onClick={() => handleEdit(bed)}
-                    className="bg-green-500 hover:bg-green-600 text-white px-3 py-1 rounded-md flex items-center gap-1 text-sm"
+                  className="bg-green-600 hover:bg-green-700 text-white px-5 py-2 rounded-md text-sm font-medium"
                   >
-                    <Edit size={14} /> Edit
+                     Edit
                   </button>
                   <button
                     onClick={() => handleDelete(bed._id)}
-                    className="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded-md flex items-center gap-1 text-sm"
+                    className="bg-red-600 hover:bg-red-700 text-white px-5 py-2 rounded-md text-sm font-medium"
                   >
-                    <Trash2 size={14} /> Delete
+                    
+                     Delete
                   </button>
                 </td>
               </tr>
@@ -177,12 +196,14 @@ const BedManagement = () => {
 
       {/* Modal */}
       {showModal && (
-        <div className="fixed inset-0 bg-black/30 backdrop-blur-sm flex justify-center items-center z-50 transition-all duration-300">
-          <div className="bg-white p-6 rounded-lg shadow-xl w-full max-w-lg transform transition-all scale-100 hover:scale-[1.01]">
+        <div className="fixed inset-0 bg-black/30 backdrop-blur-sm flex justify-center items-center z-50">
+          <div className="bg-white p-6 rounded-lg shadow-xl w-full max-w-lg">
             <h2 className="text-xl font-semibold mb-4">
               {editingBed ? "Edit Bed" : "Add New Bed"}
             </h2>
+
             <form onSubmit={handleSubmit} className="space-y-4">
+              {/* Room Selection */}
               <select
                 name="roomId"
                 value={formData.roomId}
@@ -191,13 +212,18 @@ const BedManagement = () => {
                 required
               >
                 <option value="">Select Room</option>
+
                 {rooms.map((room) => (
                   <option key={room._id} value={room._id}>
                     Room {room.roomNumber} ({room.roomType})
+                    {room.guesthouseId?.guestHouseName
+                      ? ` - ${room.guesthouseId.guestHouseName}`
+                      : ""}
                   </option>
                 ))}
               </select>
 
+              {/* Bed Number */}
               <input
                 type="number"
                 name="bednumber"
@@ -207,17 +233,19 @@ const BedManagement = () => {
                 className="w-full border rounded-md p-2"
                 required
               />
-              <select
-                name="bedType"
-                value={formData.bedType}
-                onChange={handleInputChange}
-                className="w-full border rounded-md p-2"
-              >
-                <option value="single">Single</option>
-                <option value="double">Double</option>
-                <option value="suit">Suit</option>
-              </select>
 
+              {/* Single Bed (Fixed, No Dropdown) */}
+              <div>
+                <label className="text-gray-600 text-sm">Bed Type</label>
+                <input
+                  type="text"
+                  value="single"
+                  disabled
+                  className="w-full border rounded-md p-2 bg-gray-100 text-gray-500"
+                />
+              </div>
+
+              {/* Availability */}
               <div className="flex items-center gap-2">
                 <input
                   type="checkbox"
@@ -228,6 +256,7 @@ const BedManagement = () => {
                 <label>Available</label>
               </div>
 
+              {/* Buttons */}
               <div className="flex justify-end gap-3 mt-4">
                 <button
                   type="button"
@@ -238,7 +267,7 @@ const BedManagement = () => {
                 </button>
                 <button
                   type="submit"
-                  className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700"
+                  className="px-4 py-2 bg-blue-800 text-white rounded-md hover:bg-blue-700"
                 >
                   {editingBed ? "Update" : "Add Bed"}
                 </button>

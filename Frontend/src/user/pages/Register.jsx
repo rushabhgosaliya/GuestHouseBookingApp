@@ -22,6 +22,8 @@ export default function Register() {
       toast.error("Passwords do not match!");
       return;
     }
+     
+  
 
     const payload = {
       firstName: data.firstName,
@@ -32,9 +34,21 @@ export default function Register() {
       address: { line1: data.address },
     };
 
+
     try {
+
+        const st=Date.now()
+
       await axios.post("http://localhost:5000/api/auth/register", payload);
       toast.success("Registration successful!", { position: "top-center" });
+
+      
+    const et=Date.now()
+
+    const tt=et-st;
+
+    console.log(tt)
+
       setTimeout(() => navigate("/login"), 2000);
     } catch (err) {
       toast.error(err.response?.data?.message || "Registration failed!", {

@@ -1,7 +1,5 @@
 import express from "express";
 import {
-  getRoomsByGuestHouse,
-  getBedsByRoom,
   createBooking,
   getAllBookings,
   getBookingsByUser,
@@ -12,16 +10,22 @@ import {
 
 const router = express.Router();
 
-// Room/Bed fetching routes
-router.get("/rooms", getRoomsByGuestHouse);
-router.get("/beds", getBedsByRoom);
+// 🟢 Create a new booking
+router.post("/", createBooking);
 
-// Booking CRUD routes
-router.post("/", createBooking);                     // <-- remove '/bookings'
+// 🟡 Get all bookings (admin)
 router.get("/", getAllBookings);
+
+// 🟠 Get all bookings for a specific user
 router.get("/user/:userId", getBookingsByUser);
+
+// 🔵 Get single booking by ID
 router.get("/:id", getBookingById);
-router.put("/:id/status", updateBookingStatus);
+
+// 🟣 Update booking status (Approve/Reject)
+router.patch("/:id", updateBookingStatus);  // ✅ THIS LINE IS REQUIRED
+
+// 🔴 Delete booking
 router.delete("/:id", deleteBooking);
 
 export default router;

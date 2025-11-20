@@ -19,28 +19,42 @@ const MyBookings = () => {
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
 
-  useEffect(() => {
-    const fetchBookings = async () => {
-      try {
-        const storedUser = JSON.parse(localStorage.getItem("user"));
-        if (!storedUser || !storedUser._id) {
-          alert("⚠️ Please log in to view your bookings.");
-          navigate("/login");
-          return;
-        }
-
-        const res = await axios.get(
-          `http://localhost:5000/api/bookings/user/${storedUser._id}`
-        );
-        setBookings(res.data);
-        setLoading(false);
-      } catch (error) {
-        console.error("Error fetching bookings:", error);
-        setLoading(false);
+  const loadBookings = async () => {
+    try {
+      const storedUser = JSON.parse(localStorage.getItem("user"));
+      if (!storedUser || !storedUser._id) {
+        alert("⚠️ Please log in to view your bookings.");
+        navigate("/login");
+        return;
       }
-    };
 
-    fetchBookings();
+      const res = await axios.get(
+        `http://localhost:5000/api/bookings/user/${storedUser._id}`
+      );
+      setBookings(res.data);
+      setLoading(false);
+    } catch (error) {
+      console.error("Error fetching bookings:", error);
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    loadBookings();
+
+    // 🔥 Auto refresh when admin updates booking status
+    const autoRefresh = () => loadBookings();
+    window.addEventListener("storage", autoRefresh);
+
+    // 🔥 Auto refresh every 5 seconds
+    const interval = setInterval(() => {
+      loadBookings();
+    }, 5000);
+
+    return () => {
+      window.removeEventListener("storage", autoRefresh);
+      clearInterval(interval);
+    };
   }, [navigate]);
 
   const formatDate = (date) =>
@@ -86,53 +100,53 @@ const MyBookings = () => {
 
   return (
     <>
-      {/* ✅ Fixed Navbar */}
       <div className="sticky top-0 z-50">
         <Navbar />
       </div>
 
-      {/* ✅ Centered Booking Section */}
       <div className="min-h-screen flex justify-center items-center bg-gradient-to-br from-gray-100 via-gray-300 to-gray-200 px-6 py-20">
         <div className="max-w-6xl w-full bg-white rounded-2xl shadow-2xl border border-blue-200 p-4">
-          {/* Header */}
           <div className="flex justify-between items-center mb-8">
-            <h2 className="text-3xl font-bold text-blue-700">My Bookings</h2>
+            <h2 className="text-3xl font-bold text-blue-800">My Bookings</h2>
+
+            {/* ✅ Updated Back Button */}
             <button
-              onClick={() => navigate(-1)}
-              className="flex items-center gap-2 bg-blue-600 text-white px-4 py-2 rounded-lg shadow hover:bg-blue-700 transition-all"
+              onClick={() => navigate("/dashboard")}
+              className="px-4 py-2 flex items-center justify-center gap-2 bg-blue-800 text-white rounded-lg font-semibold shadow-md hover:bg-blue-700 hover:shadow-lg transition-all duration-200"
             >
-              <ArrowLeft size={18} /> Back
+              <ArrowLeft size={18} className="mt-[1px]" />
+              <span>Back</span>
             </button>
           </div>
 
-          {/* Booking List Table */}
           <div className="overflow-x-auto">
             <table className="min-w-full border border-blue-200 rounded-lg overflow-hidden">
-              <thead className="bg-blue-600 text-white">
+              <thead className="bg-blue-800 text-white shadow-md">
                 <tr>
-                  <th className="py-3 px-4 text-left font-semibold">
+                  <th className="px-4 py-2 font-semibold text-left">
                     <ClipboardList className="inline mr-1" size={16} /> Booking ID
                   </th>
-                  <th className="py-3 px-4 text-left font-semibold">
+                  <th className="px-4 py-2 font-semibold text-left">
                     <Home className="inline mr-1" size={16} /> Guest House
                   </th>
-                  <th className="py-3 px-4 text-left font-semibold">
+                  <th className="px-4 py-2 font-semibold text-left">
                     <BedDouble className="inline mr-1" size={16} /> Room
                   </th>
-                  <th className="py-3 px-4 text-left font-semibold">
+                  <th className="px-4 py-2 font-semibold text-left">
                     <Hash className="inline mr-1" size={16} /> Bed
                   </th>
-                  <th className="py-3 px-4 text-left font-semibold">
+                  <th className="px-4 py-2 font-semibold text-left">
                     <CalendarDays className="inline mr-1" size={16} /> Check-In
                   </th>
-                  <th className="py-3 px-4 text-left font-semibold">
+                  <th className="px-4 py-2 font-semibold text-left">
                     <CalendarDays className="inline mr-1" size={16} /> Check-Out
                   </th>
-                  <th className="py-3 px-4 text-center font-semibold">
+                  <th className="px-4 py-2 font-semibold text-center">
                     Status
                   </th>
                 </tr>
               </thead>
+
               <tbody className="divide-y divide-blue-100">
                 {bookings.map((booking, index) => (
                   <tr
@@ -162,12 +176,15 @@ const MyBookings = () => {
                         className={`px-3 py-1 rounded-full text-sm font-semibold ${
                           booking.status === "Approved"
                             ? "bg-green-100 text-green-700"
-                            : booking.status === "Cancelled"
+                            : booking.status === "Rejected" ||
+                              booking.status === "Cancelled"
                             ? "bg-red-100 text-red-700"
                             : "bg-yellow-100 text-yellow-700"
                         }`}
                       >
-                        {booking.status || "Pending"}
+                        {booking.status === "Cancelled"
+                          ? "Rejected"
+                          : booking.status}
                       </span>
                     </td>
                   </tr>
@@ -175,6 +192,7 @@ const MyBookings = () => {
               </tbody>
             </table>
           </div>
+
         </div>
       </div>
 

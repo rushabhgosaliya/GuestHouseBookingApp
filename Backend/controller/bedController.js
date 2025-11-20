@@ -101,13 +101,14 @@
 // };
 
 import Bed from "../models/bedSchema.js";
+import { logAction } from "../utils/auditLogger.js";   // ✅ Add import
 
 // ✅ Get all beds
 export const getAllBeds = async (req, res) => {
   try {
     const beds = await Bed.find().populate({
       path: "roomId",
-      select: "roomNumber roomType", // only fetch these fields
+      select: "roomNumber roomType",
     });
     res.status(200).json(beds);
   } catch (error) {
@@ -130,18 +131,34 @@ export const getBedsByRoom = async (req, res) => {
   }
 };
 
-
 // ✅ Add new bed
 export const addBed = async (req, res) => {
   try {
     const { roomId, bednumber, bedType, isAvailable } = req.body;
-    const newBed = new Bed({ roomId, bednumber, bedType, isAvailable });
+
+    const newBed = new Bed({
+      roomId,
+      bednumber,
+      bedType: bedType || "single",  // ⭐ DEFAULT SINGLE
+      isAvailable,
+    });
+
     await newBed.save();
+
+    await logAction(
+      req.user?._id,
+      "Created",
+      "Bed",
+      newBed._id,
+      `Bed number ${newBed.bednumber} added to room ${newBed.roomId}`
+    );
+
     res.status(201).json({ message: "Bed added successfully", bed: newBed });
   } catch (error) {
     res.status(400).json({ message: "Error adding bed", error });
   }
 };
+
 
 // ✅ Update bed
 export const updateBed = async (req, res) => {
@@ -149,6 +166,16 @@ export const updateBed = async (req, res) => {
     const updated = await Bed.findByIdAndUpdate(req.params.id, req.body, {
       new: true,
     });
+
+    // 🟢 AUDIT LOG — BED UPDATED
+    await logAction(
+      req.user?._id,
+      "Updated",
+      "Bed",
+      updated?._id,
+      `Bed number ${updated?.bednumber} updated`
+    );
+
     res.status(200).json({ message: "Bed updated successfully", bed: updated });
   } catch (error) {
     res.status(400).json({ message: "Error updating bed", error });
@@ -158,7 +185,17 @@ export const updateBed = async (req, res) => {
 // ✅ Delete bed
 export const deleteBed = async (req, res) => {
   try {
-    await Bed.findByIdAndDelete(req.params.id);
+    const deletedBed = await Bed.findByIdAndDelete(req.params.id);
+
+    // 🟢 AUDIT LOG — BED DELETED
+    await logAction(
+      req.user?._id,
+      "Deleted",
+      "Bed",
+      deletedBed?._id,
+      `Bed number ${deletedBed?.bednumber} deleted`
+    );
+
     res.status(200).json({ message: "Bed deleted successfully" });
   } catch (error) {
     res.status(400).json({ message: "Error deleting bed", error });

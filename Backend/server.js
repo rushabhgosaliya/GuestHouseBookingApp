@@ -12,6 +12,7 @@ import roomRoutes from "./routes/roomRoutes.js";
 import bedRoutes from "./routes/bedRoutes.js";
 import userRoutes from "./routes/userRoute.js";
 import bookingRoutes from "./routes/bookingRoutes.js";
+import auditLogRoutes from "./routes/auditLogRoutes.js";
 
 
 // Load .env file
@@ -58,6 +59,8 @@ app.use("/api/beds",bedRoutes);
 app.use("/api/users", userRoutes);
 
 app.use("/api/bookings", bookingRoutes);
+
+app.use("/api/auditlogs", auditLogRoutes);
 
 // Start Server
 const PORT = process.env.PORT_NUMBER || 5000;

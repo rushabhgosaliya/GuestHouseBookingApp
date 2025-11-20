@@ -12,6 +12,7 @@ import AdminDashboard from "./admin/pages/AdminDashboard";
 import Index from "./user/pages/Index";
 import Profile from "./user/pages/Profile";
 import MyBookings from "./user/pages/MyBookings";
+import LandingPage from "./user/pages/LandingPage";
 
 
 export default function App() {
@@ -22,8 +23,8 @@ export default function App() {
       <Route path="/login" element={<Login />} />
       <Route path="/register" element={<Register />} />
       <Route path="/forgot-password" element={<ForgotPassword />} />
-      <Route path="/reset-password" element={<ResetPassword />} />
-      <Route path="/Home" element={<Index />} />
+      <Route path="/reset-password/:token" element={<ResetPassword />} />
+      <Route path="/index" element={<LandingPage/>} />
       <Route path="/profile" element={<Profile />} />
       
       

@@ -134,7 +134,7 @@ const UserNav = () => {
             </p>
             <button
               onClick={handleLogout}
-              className="px-4 py-2 bg-blue-600 text-white rounded-lg font-semibold shadow-md hover:bg-blue-700 hover:shadow-lg transition-all duration-200"
+              className="px-4 py-2 bg-blue-800 text-white rounded-lg font-semibold shadow-md hover:bg-blue-700 hover:shadow-lg transition-all duration-200"
             >
               Logout
             </button>

@@ -97,7 +97,7 @@ export default function GuestHouseCard() {
                   className={`book-btn w-full font-semibold px-5 py-3 rounded-lg border transition-all duration-300 ${
                     house.underMaintenance
                       ? "bg-gray-400 text-white cursor-not-allowed"
-                      : "bg-gradient-to-r from-blue-500 to-[#4C5C68] text-white border-[#4C5C68]/40 hover:translate-y-[-2px] hover:from-blue-600 hover:to-gray-500 shadow-md"
+                      : "bg-blue-800 text-white border-[#4C5C68]/40 hover:translate-y-[-2px] hover:from-blue-600 hover:to-gray-500 shadow-md"
                   }`}
                 >
                   {house.underMaintenance ? "Unavailable" : "Book Now"}

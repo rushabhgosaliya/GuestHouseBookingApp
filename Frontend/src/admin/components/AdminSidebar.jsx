@@ -45,11 +45,11 @@ const AdminSidebar = () => {
       path: "/admin/rooms",
     },
     { name: "Bed Management", icon: <MdBed size={20} />, path: "/admin/beds" },
-    {
-      name: "Notifications",
-      icon: <MdNotifications size={20} />,
-      path: "/admin/notifications",
-    },
+    // {
+    //   name: "Notifications",
+    //   icon: <MdNotifications size={20} />,
+    //   path: "/admin/notifications",
+    // },
     {
       name: "Audit Logs",
       icon: <MdAssignment size={20} />,
@@ -71,7 +71,7 @@ const AdminSidebar = () => {
 
       {/* Sidebar */}
       <div
-        className={`fixed md:static z-40 w-auto left-0 h-screen bg-gradient-to-b from-blue-700 to-blue-900 text-white shadow-lg p-5 pt-8 duration-300 
+        className={`fixed md:static z-40 w-auto left-0 h-screen bg-gradient-to-b from-blue-800 to-blue-900 text-white shadow-lg p-5 pt-8 duration-300 
         ${isOpen ? "w-64" : "w-20"} 
         ${isOpen ? "translate-x-0" : "-translate-x-full md:translate-x-0"}`}
       >

@@ -2,7 +2,8 @@ import Room from "../models/roomSchema.js";
 import Bed from "../models/bedSchema.js";
 import Booking from "../models/bookingSchema.js";
 import mongoose from "mongoose";
-// import { v4 as uuidv4 } from "uuid";
+import { sendNewBookingEmails, sendBookingStatusEmail } from "../utils/sendMail.js";
+import { logAction } from "../utils/auditLogger.js";   // ✅ ADD THIS
 
 // 🟢 Fetch all rooms for a guest house
 export const getRoomsByGuestHouse = async (req, res) => {
@@ -29,30 +30,40 @@ export const getBedsByRoom = async (req, res) => {
 // 🟢 Create new booking
 export const createBooking = async (req, res) => {
   try {
-    const { userId, guesthouseId, roomId, bedId, checkIn, checkOut } = req.body;
+    const booking = await Booking.create(req.body);
 
-    if (!userId || !guesthouseId || !roomId || !bedId || !checkIn || !checkOut) {
-      return res.status(400).json({ message: "All fields are required" });
-    }
-
-    // Create new booking entry
-    const newBooking = new Booking({
-
-      userId,
-      guesthouseId,
-      roomId,
-      bedId,
-      checkIn,
-      checkOut,
+    // ⬇️ Send response IMMEDIATELY (NO WAITING)
+    res.status(201).json({ 
+      message: "Booking created", 
+      bookingId: booking._id 
     });
 
-    await newBooking.save();
-    res.status(201).json({ message: "Booking successful ✅", booking: newBooking });
-  } catch (err) {
-    console.error("Error creating booking:", err);
-    res.status(500).json({ message: "Error creating booking" });
+    // ⬇️ Run slow operations IN BACKGROUND
+    setImmediate(async () => {
+      try {
+        const populated = await Booking.findById(booking._id)
+          .populate("userId", "firstName lastName email")
+          .populate("guesthouseId", "guestHouseName");
+
+        await sendNewBookingEmails(populated);
+        await logAction(
+          req.user?._id,
+          "Created",
+          "Booking",
+          booking._id,
+          `Booking created for guesthouse: ${populated?.guesthouseId?.guestHouseName}`
+        );
+      } catch (err) {
+        console.error("Background booking tasks error:", err);
+      }
+    });
+
+  } catch (error) {
+    console.error("Error creating booking:", error);
+    res.status(500).json({ message: "Server error while creating booking" });
   }
 };
+
 
 // 🟡 Get all bookings (admin)
 export const getAllBookings = async (req, res) => {
@@ -107,6 +118,7 @@ export const getBookingById = async (req, res) => {
       .populate("bedId", "bednumber");
 
     if (!booking) return res.status(404).json({ message: "Booking not found" });
+
     res.status(200).json(booking);
   } catch (err) {
     console.error("Error fetching booking by ID:", err);
@@ -120,25 +132,29 @@ export const updateBookingStatus = async (req, res) => {
     const { id } = req.params;
     const { status } = req.body;
 
-    if (!["Pending", "Approved", "Cancelled"].includes(status)) {
-      return res.status(400).json({ message: "Invalid status" });
+    const updated = await Booking.findByIdAndUpdate(id, { status }, { new: true })
+      .populate("userId", "firstName lastName email")
+      .populate("guesthouseId", "guestHouseName");
+
+    if (!updated) {
+      return res.status(404).json({ message: "Booking not found" });
     }
 
-    const updatedBooking = await Booking.findByIdAndUpdate(
-      id,
-      { status },
-      { new: true }
+    // Notify user
+    await sendBookingStatusEmail(updated);
+
+    // 🟣 AUDIT LOG — BOOKING STATUS UPDATED
+    await logAction(
+      req.user?._id,
+      "Updated",
+      "Booking",
+      updated._id,
+      `Booking status changed to ${status}`
     );
 
-    if (!updatedBooking)
-      return res.status(404).json({ message: "Booking not found" });
-
-    res.status(200).json({
-      message: "Booking status updated successfully ✅",
-      booking: updatedBooking,
-    });
-  } catch (err) {
-    console.error("Error updating booking status:", err);
+    res.status(200).json({ message: "Booking status updated", booking: updated });
+  } catch (error) {
+    console.error("Error updating booking status:", error);
     res.status(500).json({ message: "Error updating booking status" });
   }
 };
@@ -151,6 +167,15 @@ export const deleteBooking = async (req, res) => {
     const deletedBooking = await Booking.findByIdAndDelete(id);
     if (!deletedBooking)
       return res.status(404).json({ message: "Booking not found" });
+
+    // 🔴 AUDIT LOG — BOOKING DELETED
+    await logAction(
+      req.user?._id,
+      "Deleted",
+      "Booking",
+      deletedBooking._id,
+      `Booking deleted for user ${deletedBooking.userId}`
+    );
 
     res.status(200).json({ message: "Booking deleted successfully ✅" });
   } catch (err) {

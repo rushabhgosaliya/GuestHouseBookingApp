@@ -42,6 +42,10 @@ const userSchema = new mongoose.Schema(
     address: {
       line1: { type: String },
     },
+    isActive: {
+      type: Boolean,
+      default: true,
+    },
   },
   { timestamps: true }
 );
@@ -49,13 +53,11 @@ const userSchema = new mongoose.Schema(
 // Add auto-increment plugin
 userSchema.plugin(AutoIncrement, { inc_field: "userId" });
 
-userSchema.pre('save', async function(next){
- //Only hash password if it is changed or new
- if(!this.isModified('password')) return next();
-
- const salt = await bcrypt.genSalt(10);
- this.password = await bcrypt.hash(this.password, salt);
- next();
+userSchema.pre("save", async function (next) {
+  if (!this.isModified("password")) return next();
+  const salt = await bcrypt.genSalt(10);
+  this.password = await bcrypt.hash(this.password, salt);
+  next();
 });
 
 export default mongoose.model("User", userSchema);

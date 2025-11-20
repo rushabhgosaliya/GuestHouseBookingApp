@@ -1,36 +1,125 @@
-// import userSchema from "../models/userSchema.js"; 
+// import User from "../models/userSchema.js";
+// import { logAction } from "../utils/auditLogger.js";  // ✅ Add audit logger import
 
-// export const user = async (req, res) => {
+// // ✅ Get all users
+// export const getAllUsers = async (req, res) => {
 //   try {
-//     const newUser = await userSchema.create({
-//       firstName: "Test",
-//       lastName: "User",
-//       email: "test@example.com",
-//       password: "test123",
-//       phoneNo: 9876543210,
-//       adress: {
-//         line1: "Street 1",
-//         line2: "Area 2",
-//         line3: "City 3",
-//       },
-//     });
+//     const users = await User.find();
 
-//     res.status(201).json(newUser);
-//     console.log('data display')
-//   } catch (err) {
-//     res.status(400).json({ error: err.message });
+//     // Always return address as { line1: "" }
+//     const formatted = users.map((u) => ({
+//       ...u._doc,
+//       address:
+//         typeof u.address === "string"
+//           ? { line1: u.address }
+//           : u.address || { line1: "" },
+//     }));
+
+//     res.status(200).json({ users: formatted });
+//   } catch (error) {
+//     console.error("Error fetching users:", error);
+//     res.status(500).json({ message: "Server error" });
 //   }
 // };
 
+// // ✅ Add new user
+// export const addUser = async (req, res) => {
+//   try {
+//     const newUser = new User(req.body);
+//     await newUser.save();
 
+//     // 🟢 AUDIT LOG — USER CREATED
+//     await logAction(
+//       req.user?._id,
+//       "Created",
+//       "User",
+//       newUser._id,
+//       `User ${newUser.firstName} ${newUser.lastName} created`
+//     );
+
+//     res.status(201).json({
+//       message: "User created successfully",
+//       user: newUser,
+//     });
+//   } catch (error) {
+//     console.error("Error creating user:", error);
+//     res.status(500).json({ message: "Error creating user", error });
+//   }
+// };
+
+// // ✅ Update user
+// export const updateUser = async (req, res) => {
+//   try {
+//     const { id } = req.params;
+
+//     const updatedUser = await User.findByIdAndUpdate(id, req.body, {
+//       new: true,
+//     });
+
+//     // 🟢 AUDIT LOG — USER UPDATED
+//     await logAction(
+//       req.user?._id,
+//       "Updated",
+//       "User",
+//       updatedUser?._id,
+//       `User ${updatedUser?.firstName} ${updatedUser?.lastName} updated`
+//     );
+
+//     res.status(200).json({
+//       message: "User updated successfully",
+//       user: updatedUser,
+//     });
+//   } catch (error) {
+//     console.error("Error updating user:", error);
+//     res.status(500).json({ message: "Error updating user", error });
+//   }
+// };
+
+// export const deleteUser = async (req, res) => {
+//   try {
+//     const updatedUser = await User.findByIdAndUpdate(
+//       req.params.id,
+//       { isActive: false },
+//       { new: true }
+//     );
+
+//     // 🟢 AUDIT LOG — USER DELETED
+//     await logAction(
+//       req.user?._id,
+//       "Deleted",
+//       "User",
+//       deletedUser?._id,
+//       `User ${deletedUser?.firstName} ${deletedUser?.lastName} deleted`
+//     );
+
+//     res.status(200).json({ message: "User deactivated", user: updatedUser });
+//   } catch (error) {
+//     res.status(500).json({ message: "Error deactivating user" });
+//   }
+// };
+
+// // ⭐ ACTIVATE USER – set isActive = true
+// export const activateUser = async (req, res) => {
+//   try {
+//     const updatedUser = await User.findByIdAndUpdate(
+//       req.params.id,
+//       { isActive: true },
+//       { new: true }
+//     );
+
+//     res.status(200).json({ message: "User activated", user: updatedUser });
+//   } catch (error) {
+//     res.status(500).json({ message: "Error activating user" });
+//   }
+// };
 import User from "../models/userSchema.js";
+import { logAction } from "../utils/auditLogger.js";
 
-// ✅ Get all users
+// Get all users
 export const getAllUsers = async (req, res) => {
   try {
     const users = await User.find();
 
-    // Always return address as { line1: "" }
     const formatted = users.map((u) => ({
       ...u._doc,
       address:
@@ -41,49 +130,94 @@ export const getAllUsers = async (req, res) => {
 
     res.status(200).json({ users: formatted });
   } catch (error) {
-    console.error("Error fetching users:", error);
     res.status(500).json({ message: "Server error" });
   }
 };
 
-// ✅ Add new user
+// Add user
 export const addUser = async (req, res) => {
   try {
     const newUser = new User(req.body);
     await newUser.save();
-    res
-      .status(201)
-      .json({ message: "User created successfully", user: newUser });
+
+    await logAction(
+      req.user?._id,
+      "Created",
+      "User",
+      newUser._id,
+      `User ${newUser.firstName} ${newUser.lastName} created`
+    );
+
+    res.status(201).json({ message: "User created successfully", user: newUser });
   } catch (error) {
-    console.error("Error creating user:", error);
     res.status(500).json({ message: "Error creating user", error });
   }
 };
 
-// ✅ Update user
+// Update user
 export const updateUser = async (req, res) => {
   try {
-    const { id } = req.params;
-    const updatedUser = await User.findByIdAndUpdate(id, req.body, {
+    const updatedUser = await User.findByIdAndUpdate(req.params.id, req.body, {
       new: true,
     });
-    res
-      .status(200)
-      .json({ message: "User updated successfully", user: updatedUser });
+
+    await logAction(
+      req.user?._id,
+      "Updated",
+      "User",
+      updatedUser?._id,
+      `User ${updatedUser?.firstName} ${updatedUser?.lastName} updated`
+    );
+
+    res.status(200).json({ message: "User updated successfully", user: updatedUser });
   } catch (error) {
-    console.error("Error updating user:", error);
     res.status(500).json({ message: "Error updating user", error });
   }
 };
 
-// ✅ Delete user
+// ⭐ Soft Delete (Deactivate)
 export const deleteUser = async (req, res) => {
   try {
-    const { id } = req.params;
-    await User.findByIdAndDelete(id);
-    res.status(200).json({ message: "User deleted successfully" });
+    const updatedUser = await User.findByIdAndUpdate(
+      req.params.id,
+      { isActive: false },
+      { new: true }
+    );
+
+    // FIXED — correct variable name
+    await logAction(
+      req.user?._id,
+      "Deleted",
+      "User",
+      updatedUser?._id,
+      `User ${updatedUser?.firstName} ${updatedUser?.lastName} deactivated`
+    );
+
+    return res.status(200).json({
+      success: true,
+      message: "User deactivated",
+      user: updatedUser,
+    });
   } catch (error) {
-    console.error("Error deleting user:", error);
-    res.status(500).json({ message: "Error deleting user", error });
+    res.status(500).json({ message: "Error deactivating user" });
+  }
+};
+
+// ⭐ Activate User
+export const activateUser = async (req, res) => {
+  try {
+    const updatedUser = await User.findByIdAndUpdate(
+      req.params.id,
+      { isActive: true },
+      { new: true }
+    );
+
+    res.status(200).json({
+      success: true,
+      message: "User activated",
+      user: updatedUser,
+    });
+  } catch (error) {
+    res.status(500).json({ message: "Error activating user" });
   }
 };

@@ -7,14 +7,17 @@ import GuestHouses from "../pages/GuestHouses";
 import RoomsManagement from "../pages/RoomsManagement";
 import BedManagement from "../pages/BedManagement"
 import UserManagement from "../pages/UserManagement";
+import BookingManagement from "../pages/BookingManagement";
+import AuditLogPage from "../pages/AuditLogPage";
 
 
-const BookingManagement = () => (
-  <div className="p-8">
-    <h2 className="text-2xl font-semibold text-gray-800">Booking Management</h2>
-    <p className="text-gray-600 mt-4">Manage all guest bookings here.</p>
-  </div>
-);
+
+// const BookingManagement = () => (
+//   <div className="p-8">
+//     <h2 className="text-2xl font-semibold text-gray-800">Booking Management</h2>
+//     <p className="text-gray-600 mt-4">Manage all guest bookings here.</p>
+//   </div>
+// );
 
 // const UserManagement = () => (
 //   <div className="p-8">
@@ -44,31 +47,31 @@ const BookingManagement = () => (
 //   </div>
 // );
 
-const Notifications = () => (
-  <div className="p-8">
-    <h2 className="text-2xl font-semibold text-gray-800">Notifications</h2>
-    <p className="text-gray-600 mt-4">View latest updates and system alerts.</p>
-  </div>
-);
+// const Notifications = () => (
+//   <div className="p-8">
+//     <h2 className="text-2xl font-semibold text-gray-800">Notifications</h2>
+//     <p className="text-gray-600 mt-4">View latest updates and system alerts.</p>
+//   </div>
+// );
 
-const AuditLogs = () => (
-  <div className="p-8">
-    <h2 className="text-2xl font-semibold text-gray-800">Audit Logs</h2>
-    <p className="text-gray-600 mt-4">Track all admin activities and history.</p>
-  </div>
-);
+// const AuditLogs = () => (
+//   <div className="p-8">
+//     <h2 className="text-2xl font-semibold text-gray-800">Audit Logs</h2>
+//     <p className="text-gray-600 mt-4">Track all admin activities and history.</p>
+//   </div>
+// );
 
 const AdminRoutes = () => {
   return (
     <Routes>z
       <Route path="/dashboard" element={<Dashboard />} />
-      <Route path="/bookings" element={<BookingManagement />} />
+      <Route path="/bookings" element={<BookingManagement/>} />
       <Route path="/users" element={<UserManagement/>} />
       <Route path="/guesthouses" element={<GuestHouses/>} />
       <Route path="/rooms" element={<RoomsManagement/>} />
       <Route path="/beds" element={<BedManagement />} />
-      <Route path="/notifications" element={<Notifications />} />
-      <Route path="/audit-logs" element={<AuditLogs />} />
+      {/* <Route path="/notifications" element={<Notifications />} /> */}
+      <Route path="/audit-logs" element={<AuditLogPage/>} />
       <Route path="/recent-bookings" element={<RecentBooking />} />
     </Routes>
   );

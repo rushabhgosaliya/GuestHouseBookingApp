@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { PlusCircle } from "lucide-react";
 
 const API_URL = "http://localhost:5000/api/guesthouses";
 
@@ -132,13 +133,14 @@ const GuestHouses = () => {
       {/* Header */}
       <div className="flex justify-between items-center mb-10">
         <h1 className="text-3xl font-bold text-gray-800 tracking-wide">
-           Guest House Management
+          Guest House Management
         </h1>
         <button
           onClick={() => setIsModalOpen(true)}
-          className="px-6 py-3 bg-gradient-to-r bg-blue-600 text-white rounded-lg font-semibold shadow-md hover:bg-blue-700 hover:shadow-lg transition-all duration-200"
+          className="flex items-center gap-2 px-6 py-3 bg-blue-800 text-white rounded-lg font-semibold shadow-md hover:bg-blue-700 hover:shadow-lg transition-all duration-200"
         >
-           Add Guest House
+          <PlusCircle size={22} />
+          Add Guest House
         </button>
       </div>
 
@@ -154,7 +156,7 @@ const GuestHouses = () => {
             </button>
 
             <h2 className="text-2xl font-semibold text-center text-gray-700 mb-6">
-              {editingId ? "✏️ Edit Guest House" : "Add New Guest House"}
+              {editingId ? "Edit Guest House" : "Add New Guest House"}
             </h2>
 
             <form onSubmit={handleSubmit} className="space-y-4">
@@ -174,7 +176,9 @@ const GuestHouses = () => {
 
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-gray-600 text-sm mb-1">City</label>
+                  <label className="block text-gray-600 text-sm mb-1">
+                    City
+                  </label>
                   <input
                     type="text"
                     name="city"
@@ -184,7 +188,9 @@ const GuestHouses = () => {
                   />
                 </div>
                 <div>
-                  <label className="block text-gray-600 text-sm mb-1">State</label>
+                  <label className="block text-gray-600 text-sm mb-1">
+                    State
+                  </label>
                   <input
                     type="text"
                     name="state"
@@ -245,7 +251,7 @@ const GuestHouses = () => {
                 </button>
                 <button
                   type="submit"
-                  className="px-6 py-2 bg-gradient-to-r from-blue-500 to-blue-600 text-white rounded-lg hover:from-blue-600 hover:to-blue-700 transition-all"
+                  className="px-6 py-2 bg-blue-800 to-blue-600 text-white rounded-lg hover:from-blue-700 hover:to-blue-700 transition-all"
                 >
                   {editingId ? "Update" : "Add"}
                 </button>
@@ -303,13 +309,14 @@ const GuestHouses = () => {
                   <div className="flex gap-2">
                     <button
                       onClick={() => handleEdit(gh)}
-                      className="px-3 py-1 bg-green-500 text-white text-xs rounded-md hover:bg-green-600 transition"
+                      className="px-4 py-2 bg-green-600 text-white text-sm rounded-lg shadow hover:bg-green-700 transition"
                     >
                       Edit
                     </button>
+
                     <button
                       onClick={() => handleDelete(gh._id)}
-                      className="px-3 py-1 bg-red-500 text-white text-xs rounded-md hover:bg-red-600 transition"
+                      className="px-4 py-2 bg-red-600 text-white text-sm rounded-lg shadow hover:bg-red-700 transition"
                     >
                       Delete
                     </button>

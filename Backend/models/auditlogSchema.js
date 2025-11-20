@@ -1,28 +1,40 @@
 import mongoose from "mongoose";
-const auditlogSchema = new mongoose.Schema(
+import AutoIncrementFactory from "mongoose-sequence";
+
+const connection = mongoose.connection;
+const AutoIncrement = AutoIncrementFactory(connection);
+
+const auditLogSchema = new mongoose.Schema(
   {
     auditId: {
-      type: String,
-      required: true,
+      type: Number,
       unique: true,
     },
     userId: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "User",
-      required: true,
+      type: String,
+      default:"System"
     },
     action: {
       type: String,
-      enum: ["Approved", "Cancled", "Updated", "Deleted"],
-    },
-    details: {
-      type: String,
+      enum: ["Created", "Updated", "Deleted"],
+      required: true,
     },
     entityType: {
+      type: String, // e.g. GuestHouse, Room, Bed, User
+      required: true,
+    },
+    entityId: {
+      type: mongoose.Schema.Types.ObjectId, // reference to the modified entity
+      required: true,
+    },
+    details: {
       type: String,
     },
   },
   { timestamps: true }
 );
 
-export default mongoose.model("auditLog", auditlogSchema);
+// ✅ Auto-increment for auditId
+auditLogSchema.plugin(AutoIncrement, { inc_field: "auditId" });
+
+export default mongoose.model("AuditLog", auditLogSchema);

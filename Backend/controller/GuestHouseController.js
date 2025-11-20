@@ -1,9 +1,10 @@
-import GuestHouse from "../models/guestHouseSchema.js";
+import GuestHouse from "../models/guesthouseSchema.js";
+import { logAction } from "../utils/auditLogger.js";
 
 // 🟢 Create a new Guest House
 export const createGuestHouse = async (req, res) => {
   try {
-    const { guestHouseName, location, description, image_url, underMaintenance } = req.body;
+    const { guestHouseName, location, description, image_url, underMaintenance, userId } = req.body;
 
     if (!guestHouseName || !image_url) {
       return res.status(400).json({ message: "Guest house name and image are required." });
@@ -18,6 +19,16 @@ export const createGuestHouse = async (req, res) => {
     });
 
     const savedGuestHouse = await newGuestHouse.save();
+
+    // 🧾 Log creation
+    await logAction(
+      userId,
+      "Created",
+      "GuestHouse",
+      savedGuestHouse._id,
+      `Created guest house: ${guestHouseName}`
+    );
+
     res.status(201).json({
       message: "Guest house created successfully",
       guesthouse: savedGuestHouse,
@@ -56,15 +67,22 @@ export const getGuestHouseById = async (req, res) => {
 // 🔵 Update Guest House
 export const updateGuestHouse = async (req, res) => {
   try {
-    const updated = await GuestHouse.findByIdAndUpdate(
-      req.params.id,
-      req.body,
-      { new: true }
-    );
+    const userId = req.user?._id || req.body?.userId || req.query?.userId || null;
+
+    const updated = await GuestHouse.findByIdAndUpdate(req.params.id, req.body, { new: true });
 
     if (!updated) {
       return res.status(404).json({ message: "Guest house not found" });
     }
+
+    // 🧾 Log update
+    await logAction(
+      userId,
+      "Updated",
+      "GuestHouse",
+      updated._id,
+      `Updated guest house: ${updated.guestHouseName}`
+    );
 
     res.status(200).json({
       message: "Guest house updated successfully",
@@ -79,11 +97,22 @@ export const updateGuestHouse = async (req, res) => {
 // 🔴 Delete Guest House
 export const deleteGuestHouse = async (req, res) => {
   try {
+    const userId = req.user?._id || req.body?.userId || req.query?.userId || null;
+
     const deleted = await GuestHouse.findByIdAndDelete(req.params.id);
 
     if (!deleted) {
       return res.status(404).json({ message: "Guest house not found" });
     }
+
+    // 🧾 Log deletion
+    await logAction(
+      userId,
+      "Deleted",
+      "GuestHouse",
+      deleted._id,
+      `Deleted guest house: ${deleted.guestHouseName}`
+    );
 
     res.status(200).json({ message: "Guest house deleted successfully" });
   } catch (error) {
