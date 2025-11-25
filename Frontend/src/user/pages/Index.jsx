@@ -1,50 +1,79 @@
 import React from "react";
-import UserNav from "../components/Navbar";
+import LandingNavbar from "../components/LandingNavbar ";
+import GuestHouseCard from "../components/GuestHouseCard";
+import { useNavigate } from "react-router-dom";
 
-const Index = () => {
+export default function LandingPage() {
+  const navigate = useNavigate();
+
+  // BOOK NOW LOGIC
+  const handleBookNow = () => {
+    const user = localStorage.getItem("user");
+
+    if (!user) {
+      navigate("/login");
+    } else {
+      navigate("/bookingform");
+    }
+  };
+
   return (
-    <div className="bg-gray-50 min-h-screen">
-      {/* ✅ Top Navbar */}
-      <UserNav />
+    <div className="w-full min-h-screen bg-gradient-to-br from-gray-100 via-gray-300 to-gray-200 overflow-x-hidden">
+      
+      {/* NAVBAR */}
+      <LandingNavbar />
 
-      {/* 🌄 Hero Section */}
-      <div className="relative w-full h-screen">
-        {/* Background Image */}
-        <img
-          src="https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=1920&q=80"
-          alt="Guest House"
-          className="w-full h-full object-cover"
-        />
+      {/* HERO SECTION (UPDATED) */}
+      <section
+        className="relative w-full min-h-[90vh] flex flex-col justify-center items-center text-center 
+        bg-cover bg-center bg-no-repeat shadow-2xl rounded-b-3xl"
+        style={{
+          backgroundImage:
+            "url('https://images.unsplash.com/photo-1505691938895-1758d7feb511?auto=format&fit=crop&w=1500&q=80')",
+        }}
+      >
+        {/* Dark Overlay */}
+        <div className="absolute inset-0 bg-black/50 backdrop-blur-[1.5px] rounded-b-3xl"></div>
 
-        {/* 🖤 Dark Overlay */}
-        <div className="absolute inset-0 bg-black/60 flex flex-col items-center justify-center text-center text-white px-6">
-          {/* Title */}
-          <h1 className="text-4xl md:text-6xl font-extrabold mb-4 leading-tight tracking-wide drop-shadow-xl">
-            Welcome to{" "}
-            <span className="text-white">Rishabh’s Guest-House</span>
+        {/* CENTERED CONTENT */}
+        <div className="relative z-10 max-w-4xl px-4 w-full flex flex-col items-center">
+          
+          {/* Heading */}
+          <h1 className="text-4xl md:text-5xl font-extrabold text-white drop-shadow-2xl leading-tight">
+            Welcome to Rishabh's Guest House
           </h1>
 
-          <p className="text-lg md:text-xl max-w-2xl mb-10 opacity-90 font-light leading-relaxed">
-            A peaceful escape where luxury meets comfort. Enjoy elegant rooms,
-            serene surroundings, and heartfelt hospitality — your perfect stay
-            begins here.
+          {/* Subheading */}
+          <p className="mt-4 text-gray-200 text-lg md:text-xl max-w-2xl mx-auto drop-shadow-lg">
+            Book your stay with comfort, luxury, and peace of mind.
           </p>
 
-          {/* ✨ Book Now Button */}
+          {/* BOOK NOW BUTTON ONLY (FORM REMOVED) */}
           <button
-            style={{ width: "200px" }}
-            onClick={() => (window.location.href = "/bookingform")}
-            className="px-8 py-3 rounded-lg font-semibold text-white 
-             bg-gradient-to-r from-yellow-500 to-amber-600 
-             shadow-md hover:shadow-xl hover:scale-105 
-             transition-all duration-300"
+            onClick={handleBookNow}
+            className="mt-10 w-full md:w-auto bg-white text-blue-800 px-10 py-4 rounded-xl 
+            font-semibold text-lg shadow-xl hover:bg-blue-700  hover:text-white transition-all duration-300"
           >
             Book Now
           </button>
         </div>
-      </div>
+      </section>
+
+      {/* FEATURED GUEST HOUSES */}
+      <section className="px-6 md:px-12 lg:px-20 pb-20 text-center mt-20">
+        <h2 className="text-3xl md:text-4xl font-bold text-blue-900 mb-14 tracking-wide">
+          Featured Guest Houses
+        </h2>
+
+        <GuestHouseCard isLanding={true} />
+      </section>
+
+      {/* FOOTER */}
+      <footer className="bg-white py-6 text-center shadow-inner border-t">
+        <p className="text-gray-600 font-medium">
+          © {new Date().getFullYear()} Rishabh's Guest-House. All Rights Reserved.
+        </p>
+      </footer>
     </div>
   );
-};
-
-export default Index;
+}

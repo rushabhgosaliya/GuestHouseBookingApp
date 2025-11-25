@@ -22,8 +22,6 @@ export default function Register() {
       toast.error("Passwords do not match!");
       return;
     }
-     
-  
 
     const payload = {
       firstName: data.firstName,
@@ -34,20 +32,17 @@ export default function Register() {
       address: { line1: data.address },
     };
 
-
     try {
-
-        const st=Date.now()
+      const st = Date.now();
 
       await axios.post("http://localhost:5000/api/auth/register", payload);
       toast.success("Registration successful!", { position: "top-center" });
 
-      
-    const et=Date.now()
+      const et = Date.now();
 
-    const tt=et-st;
+      const tt = et - st;
 
-    console.log(tt)
+      console.log(tt);
 
       setTimeout(() => navigate("/login"), 2000);
     } catch (err) {
@@ -81,7 +76,9 @@ export default function Register() {
                 <input
                   type="text"
                   placeholder="First Name"
-                  {...register("firstName", { required: "First name is required" })}
+                  {...register("firstName", {
+                    required: "First name is required",
+                  })}
                   className="w-full px-4 py-3 border  border-gray-300 shadow-sm  rounded-xl outline-none text-gray-800 text-base focus:border-blue-500 focus:ring-2 focus:ring-blue-300"
                 />
                 {errors.firstName && (
@@ -98,7 +95,9 @@ export default function Register() {
                 <input
                   type="text"
                   placeholder="Last Name"
-                  {...register("lastName", { required: "Last name is required" })}
+                  {...register("lastName", {
+                    required: "Last name is required",
+                  })}
                   className="w-full px-4 py-3 border  border-gray-300 shadow-sm  rounded-xl outline-none text-gray-800 text-base focus:border-blue-500 focus:ring-2 focus:ring-blue-300"
                 />
                 {errors.lastName && (
@@ -116,8 +115,14 @@ export default function Register() {
                 <input
                   type="email"
                   placeholder="Email"
-                  {...register("email", { required: "Email is required" })}
-                  className="w-full px-4 py-3 border  border-gray-300 shadow-sm rounded-xl outline-none text-gray-800 text-base focus:border-blue-500 focus:ring-2 focus:ring-blue-300"
+                  {...register("email", {
+                    required: "Email is required",
+                    pattern: {
+                      value: /^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$/,
+                      message: "Invalid email format",
+                    },
+                  })}
+                  className="w-full px-4 py-3 border border-gray-300 shadow-sm rounded-xl outline-none text-gray-800 text-base focus:border-blue-500 focus:ring-2 focus:ring-blue-300"
                 />
                 {errors.email && (
                   <span className="text-red-400 text-sm mt-1">
@@ -179,7 +184,7 @@ export default function Register() {
                     className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 cursor-pointer text-lg hover:text-blue-500"
                     onClick={() => setShowPassword(!showPassword)}
                   >
-                    {showPassword ? <FaEyeSlash /> : <FaEye />}
+                    {showPassword ? <FaEye /> : <FaEyeSlash />}
                   </span>
                 </div>
                 {errors.password && (
@@ -206,7 +211,7 @@ export default function Register() {
                     className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 cursor-pointer text-lg hover:text-blue-500"
                     onClick={() => setShowConfirm(!showConfirm)}
                   >
-                    {showConfirm ? <FaEyeSlash /> : <FaEye />}
+                    {showConfirm ? <FaEye /> : <FaEyeSlash />}
                   </span>
                 </div>
                 {errors.confirmPassword && (

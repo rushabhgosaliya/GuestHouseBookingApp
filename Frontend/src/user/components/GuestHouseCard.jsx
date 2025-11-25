@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { FaMapMarkerAlt } from "react-icons/fa";
 import axios from "axios";
 
-export default function GuestHouseCard() {
+export default function GuestHouseCard({ isLanding = false }) {
   const navigate = useNavigate();
   const [guestHouses, setGuestHouses] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -31,12 +31,23 @@ export default function GuestHouseCard() {
 
   return (
     <div
-      className="px-8 py-20 flex flex-col items-center w-full bg-gradient-to-br from-[#f5f5f5] via-[#d5dbdb] to-[#e5e7eb]"
-      style={{ marginTop: "40px", boxSizing: "border-box", overflowX: "hidden" }}
+      className={
+        isLanding 
+          ? "w-full flex flex-col items-center" 
+          : "px-8 py-20 flex flex-col items-center w-full bg-gradient-to-br from-[#f5f5f5] via-[#d5dbdb] to-[#e5e7eb]"
+      }
+      style={
+        isLanding 
+          ? {} 
+          : { marginTop: "40px", boxSizing: "border-box", overflowX: "hidden" }
+      }
     >
-      <h2 className="text-5xl font-extrabold text-blue-800 mb-12 text-center tracking-wide drop-shadow-md">
-        Explore Our Beautiful Guest Houses
-      </h2>
+      {/* 3. Only show this Heading if NOT on the landing page */}
+      {!isLanding && (
+        <h2 className="text-5xl font-extrabold text-blue-800 mb-12 text-center tracking-wide drop-shadow-md">
+          Explore Our Beautiful Guest Houses
+        </h2>
+      )}
 
       {/* 🕒 Loading / Empty States */}
       {loading ? (
@@ -91,7 +102,7 @@ export default function GuestHouseCard() {
                 </p>
 
                 {/* 🟦 Book Button */}
-                <button
+                {/* <button
                   onClick={() => handleClick(house._id)}
                   disabled={house.underMaintenance}
                   className={`book-btn w-full font-semibold px-5 py-3 rounded-lg border transition-all duration-300 ${
@@ -101,7 +112,29 @@ export default function GuestHouseCard() {
                   }`}
                 >
                   {house.underMaintenance ? "Unavailable" : "Book Now"}
-                </button>
+                </button> */}
+
+                {/* 🟦 Book Button */}
+<button
+  onClick={() => {
+    const user = localStorage.getItem("user");
+
+    if (!user) {
+      navigate("/login");
+    } else {
+      navigate("/bookingform", { state: { guestHouseId: house._id } });
+    }
+  }}
+  disabled={house.underMaintenance}
+  className={`book-btn w-full font-semibold px-5 py-3 rounded-lg border transition-all duration-300 ${
+    house.underMaintenance
+      ? "bg-gray-400 text-white cursor-not-allowed"
+      : "bg-blue-800 text-white border-[#4C5C68]/40 hover:translate-y-[-2px] hover:bg-blue-700 shadow-md"
+  }`}
+>
+  {house.underMaintenance ? "Unavailable" : "Book Now"}
+</button>
+
               </div>
             </div>
           ))}
@@ -110,95 +143,3 @@ export default function GuestHouseCard() {
     </div>
   );
 }
-
-
-
-
-
-// import React from "react";
-// import { useNavigate } from "react-router-dom";
-
-// export default function GuestHouseCard() {
-//   const navigate = useNavigate();
-
-//   const handleClick = () => {
-//     navigate("/BookingForm");
-//   };
-
-//   const guestHouses = [
-//     {
-//       image: "https://images.unsplash.com/photo-1600585154340-be6161a56a0c",
-//       name: "Cozy Guest House 1",
-//       desc: "Comfortable and welcoming guest house perfect for families.",
-//     },
-//     {
-//       image: "https://images.unsplash.com/photo-1522708323590-d24dbb6b0267",
-//       name: "Luxury Villa",
-//       desc: "Premium villa with private pool and ocean view for ultimate relaxation.",
-//     },
-//     {
-//       image: "https://images.unsplash.com/photo-1560448204-e02f11c3d0e2",
-//       name: "Mountain Retreat",
-//       desc: "Peaceful getaway surrounded by fresh air and mountain views.",
-//     },
-//     {
-//       image: "https://images.unsplash.com/photo-1505691938895-1758d7feb511",
-//       name: "Lakeview Cottage",
-//       desc: "Serene lake-side cottage offering tranquility and beautiful sunsets.",
-//     },
-//     {
-//       image: "https://images.unsplash.com/photo-1522708323590-d24dbb6b0267",
-//       name: "City Lights Apartment",
-//       desc: "Modern apartment in the heart of the city with rooftop access.",
-//     },
-//     {
-//       image: "https://images.unsplash.com/photo-1519710164239-da123dc03ef4",
-//       name: "Desert Mirage Camp",
-//       desc: "Luxury desert camp experience with stargazing and bonfire nights.",
-//     },
-//   ];
-
-//   return (
-//     <div
-//       className="w-screen min-h-screen overflow-hidden"
-//       style={{
-//         background: "linear-gradient(to bottom right, #F5F5F5, #D5DBDB, #E5E7EB)",
-//         marginTop: "40px",
-//         overflowX: "hidden", // ✅ removes any side scroll
-//       }}
-//     >
-//       <div className="px-6 py-16 max-w-7xl mx-auto">
-//         <h2 className="text-4xl md:text-5xl font-extrabold text-blue-800 mb-12 text-center tracking-wide drop-shadow-md">
-//           Explore Our Beautiful Guest Houses
-//         </h2>
-
-//         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-10 justify-items-center">
-//           {guestHouses.map((house, index) => (
-//             <div
-//               key={index}
-//               className="bg-white rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl transform hover:scale-105 transition-all duration-300 w-80"
-//             >
-//               <img
-//                 src={house.image}
-//                 alt={house.name}
-//                 className="w-full h-56 object-cover"
-//               />
-//               <div className="p-6 text-center">
-//                 <h3 className="text-2xl font-bold text-gray-800 mb-2">
-//                   {house.name}
-//                 </h3>
-//                 <p className="text-gray-600 text-sm mb-3">{house.desc}</p>
-//                 <button
-//                   onClick={handleClick}
-//                   className="bg-blue-600 hover:bg-blue-700 text-white px-5 py-2 rounded-lg w-full font-medium transition-all duration-300"
-//                 >
-//                   Book Now
-//                 </button>
-//               </div>
-//             </div>
-//           ))}
-//         </div>
-//       </div>
-//     </div>
-//   );
-// }

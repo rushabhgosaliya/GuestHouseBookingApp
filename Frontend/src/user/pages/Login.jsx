@@ -62,7 +62,7 @@ export default function Login() {
                 required: "Email is required",
                 pattern: {
                   value: /^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$/,
-                  message: "Invalid email address",
+                  message: "Please enter a valid email",
                 },
               })}
               className={`px-4 py-3 border border-gray-300 shadow-sm rounded-lg outline-none text-gray-800 transition-all duration-200 ${
@@ -96,10 +96,11 @@ export default function Login() {
             />
             {/* 👇 Your provided eye toggle span */}
             <span
-              className="absolute right-4 inset-y-0 flex items-center text-gray-500 cursor-pointer text-lg hover:text-blue-500" style={{marginTop:"30px"}}
+              className="absolute right-4 inset-y-0 flex items-center text-gray-500 cursor-pointer text-lg hover:text-blue-500"
+              style={{ marginTop: "30px" }}
               onClick={() => setShowPassword(!showPassword)}
             >
-              {showPassword ? <FaEyeSlash /> : <FaEye />}
+              {showPassword ? <FaEye /> : <FaEyeSlash />}
             </span>
 
             {errors.password && (

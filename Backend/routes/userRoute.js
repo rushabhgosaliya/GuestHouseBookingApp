@@ -24,7 +24,8 @@ import {
   addUser,
   updateUser,
   deleteUser,
-  activateUser
+  activateUser,
+  changePassword
 } from "../controller/userController.js";
 
 const router = express.Router();
@@ -38,5 +39,8 @@ router.delete("/:id", deleteUser);
 
 // Activate user
 router.put("/activate/:id", activateUser);
+
+// ⭐ NEW → Change Password Route
+router.put("/change-password/:id", changePassword);
 
 export default router;

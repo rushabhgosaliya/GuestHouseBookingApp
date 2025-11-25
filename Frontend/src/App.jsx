@@ -9,17 +9,16 @@ import ResetPassword from "./user/pages/ResetPassword";
 import BookingForm from "./user/pages/BookingForm";
 import ProtectedRoute from "./routes/ProtectedRoute";
 import AdminDashboard from "./admin/pages/AdminDashboard";
-import Index from "./user/pages/Index";
 import Profile from "./user/pages/Profile";
 import MyBookings from "./user/pages/MyBookings";
-import LandingPage from "./user/pages/LandingPage";
+import LandingPage from "./user/pages/Index";
 
 
 export default function App() {
   return (
     <Routes>
       Public Routes
-      <Route path="/" element={<Login />} />
+      <Route path="/" element={<LandingPage />} />
       <Route path="/login" element={<Login />} />
       <Route path="/register" element={<Register />} />
       <Route path="/forgot-password" element={<ForgotPassword />} />
