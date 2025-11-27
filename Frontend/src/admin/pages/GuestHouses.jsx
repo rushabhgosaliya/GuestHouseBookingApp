@@ -14,6 +14,7 @@ const GuestHouses = () => {
     state: "",
     description: "",
     image_url: "",
+    imageFile: null,
     underMaintenance: false,
   });
   const [editingId, setEditingId] = useState(null);
@@ -47,47 +48,57 @@ const GuestHouses = () => {
     });
   };
 
-  // Add/Edit Submit
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    const payload = {
-      guestHouseName: formData.guestHouseName,
-      location: { city: formData.city, state: formData.state },
-      description: formData.description,
-      image_url: formData.image_url,
-      underMaintenance: formData.underMaintenance,
-    };
+  // Submit Form
+ const handleSubmit = async (e) => {
+  e.preventDefault();
 
-    try {
-      if (editingId) {
-        await axios.put(`${API_URL}/${editingId}`, payload);
-        toast.success("Guest house updated successfully!");
-      } else {
-        await axios.post(API_URL, payload);
-        toast.success("Guest house added successfully!");
-      }
+  const form = new FormData();
+  form.append("guestHouseName", formData.guestHouseName);
+  form.append("description", formData.description);
+  form.append("underMaintenance", formData.underMaintenance);
 
-      setFormData({
-        guestHouseName: "",
-        city: "",
-        state: "",
-        description: "",
-        image_url: "",
-        underMaintenance: false,
+  // ⭐ FIX: Send city + state in LOCATION object ⭐
+  form.append(
+    "location",
+    JSON.stringify({
+      city: formData.city,
+      state: formData.state,
+    })
+  );
+
+  // Image logic
+  if (formData.imageFile) {
+    form.append("image", formData.imageFile);
+  } else {
+    form.append("image_url", formData.image_url);
+  }
+
+  try {
+    if (editingId) {
+      await axios.put(`${API_URL}/${editingId}`, form, {
+        headers: { "Content-Type": "multipart/form-data" },
       });
-      setEditingId(null);
-      setIsModalOpen(false);
-      fetchGuestHouses();
-    } catch (err) {
-      console.error(err);
-      toast.error("Failed to save guest house");
+      toast.success("Guest house updated successfully!");
+    } else {
+      await axios.post(API_URL, form, {
+        headers: { "Content-Type": "multipart/form-data" },
+      });
+      toast.success("Guest house added successfully!");
     }
-  };
+
+    closeModal();
+    fetchGuestHouses();
+  } catch (err) {
+    console.error(err);
+    toast.error("Failed to save guest house");
+  }
+};
 
   // Delete guest house
   const handleDelete = async (id) => {
     if (!window.confirm("Are you sure you want to delete this guest house?"))
       return;
+
     try {
       await axios.delete(`${API_URL}/${id}`);
       toast.success("Guest house deleted successfully!");
@@ -105,7 +116,8 @@ const GuestHouses = () => {
       city: gh.location?.city || "",
       state: gh.location?.state || "",
       description: gh.description || "",
-      image_url: gh.image_url || "",
+      image_url: gh.image_url,
+      imageFile: null,
       underMaintenance: gh.underMaintenance,
     });
     setEditingId(gh._id);
@@ -122,12 +134,15 @@ const GuestHouses = () => {
       state: "",
       description: "",
       image_url: "",
+      imageFile: null,
       underMaintenance: false,
     });
   };
 
+  console.log(formData);
+
   return (
-    <div className=" p-8 min-h-screen bg-gradient-to-br from-gray-50 via-gray-100 to-gray-200 transition-all duration-300">
+    <div className="p-8 min-h-screen bg-gradient-to-br from-gray-50 via-gray-100 to-gray-200 transition-all duration-300">
       <ToastContainer position="top-right" autoClose={2000} />
 
       {/* Header */}
@@ -135,6 +150,7 @@ const GuestHouses = () => {
         <h1 className="text-3xl font-bold text-gray-800 tracking-wide">
           Guest House Management
         </h1>
+
         <button
           onClick={() => setIsModalOpen(true)}
           className="flex items-center gap-2 px-6 py-3 bg-blue-800 text-white rounded-lg font-semibold shadow-md hover:bg-blue-700 hover:shadow-lg transition-all duration-200"
@@ -147,7 +163,8 @@ const GuestHouses = () => {
       {/* Modal */}
       {isModalOpen && (
         <div className="fixed inset-0 bg-black/50 flex justify-center items-center z-50 backdrop-blur-sm">
-          <div className="bg-white rounded-2xl shadow-2xl w-full max-w-lg p-8 relative">
+          <div className="bg-white rounded-2xl shadow-2xl w-full max-w-lg max-h-[90vh] overflow-y-auto p-8 relative custom-scroll">
+            {/* Close */}
             <button
               onClick={closeModal}
               className="absolute top-3 right-4 text-gray-400 hover:text-gray-600 text-2xl"
@@ -160,6 +177,7 @@ const GuestHouses = () => {
             </h2>
 
             <form onSubmit={handleSubmit} className="space-y-4">
+              {/* Name */}
               <div>
                 <label className="block text-gray-600 text-sm mb-1">
                   Guest House Name
@@ -174,6 +192,7 @@ const GuestHouses = () => {
                 />
               </div>
 
+              {/* City / State */}
               <div className="grid grid-cols-2 gap-4">
                 <div>
                   <label className="block text-gray-600 text-sm mb-1">
@@ -187,6 +206,7 @@ const GuestHouses = () => {
                     className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-400 focus:outline-none"
                   />
                 </div>
+
                 <div>
                   <label className="block text-gray-600 text-sm mb-1">
                     State
@@ -201,20 +221,48 @@ const GuestHouses = () => {
                 </div>
               </div>
 
+              {/* Image Upload */}
               <div>
                 <label className="block text-gray-600 text-sm mb-1">
-                  Image URL
+                  Upload Image
                 </label>
-                <input
-                  type="text"
-                  name="image_url"
-                  value={formData.image_url}
-                  onChange={handleChange}
-                  required
-                  className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-400 focus:outline-none"
-                />
+
+                <div
+                  className="w-full p-6 border-2 border-dashed border-gray-400 rounded-lg text-center cursor-pointer hover:bg-gray-50"
+                  onDragOver={(e) => e.preventDefault()}
+                  onDrop={(e) => {
+                    e.preventDefault();
+                    const file = e.dataTransfer.files[0];
+                    setFormData({ ...formData, imageFile: file });
+                  }}
+                >
+                  <p className="text-gray-600">Drag & drop image here</p>
+                  <p className="text-gray-400 text-sm">or click below</p>
+
+                  <input
+                    type="file"
+                    accept="image/*"
+                    onChange={(e) =>
+                      setFormData({ ...formData, imageFile: e.target.files[0] })
+                    }
+                    className="mt-3"
+                  />
+                </div>
+
+                {(formData.imageFile || formData.image_url) && (
+                  <img
+                    src={
+                      formData.imageFile
+                        ? URL.createObjectURL(formData.imageFile)
+                        : formData.image_url
+                    }
+                    alt="Preview"
+                    className="mt-3 w-full h-40 object-cover rounded-lg shadow"
+                  />
+                )}
               </div>
 
+              {/* Description */}
               <div>
                 <label className="block text-gray-600 text-sm mb-1">
                   Description
@@ -228,6 +276,7 @@ const GuestHouses = () => {
                 />
               </div>
 
+              {/* Maintenance */}
               <div className="flex items-center gap-3">
                 <input
                   type="checkbox"
@@ -241,6 +290,7 @@ const GuestHouses = () => {
                 </label>
               </div>
 
+              {/* Buttons */}
               <div className="flex justify-end gap-4 pt-4">
                 <button
                   type="button"
@@ -249,9 +299,10 @@ const GuestHouses = () => {
                 >
                   Cancel
                 </button>
+
                 <button
                   type="submit"
-                  className="px-6 py-2 bg-blue-800 to-blue-600 text-white rounded-lg hover:from-blue-700 hover:to-blue-700 transition-all"
+                  className="px-6 py-2 bg-blue-800 text-white rounded-lg hover:bg-blue-700 transition-all"
                 >
                   {editingId ? "Update" : "Add"}
                 </button>
@@ -280,17 +331,20 @@ const GuestHouses = () => {
               >
                 <div className="overflow-hidden rounded-lg mb-3">
                   <img
-                    src={gh.image_url}
+                    src={`http://localhost:5000${gh.image_url}`}
                     alt={gh.guestHouseName}
                     className="h-44 w-full object-cover rounded-lg group-hover:scale-105 transition-transform duration-300"
                   />
                 </div>
+
                 <h3 className="text-lg font-semibold text-gray-800">
                   {gh.guestHouseName}
                 </h3>
+
                 <p className="text-sm text-gray-500">
                   {gh.location?.city}, {gh.location?.state}
                 </p>
+
                 <p className="text-sm text-gray-600 mt-2 line-clamp-3">
                   {gh.description}
                 </p>

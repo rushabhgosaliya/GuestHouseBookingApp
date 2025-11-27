@@ -11,14 +11,18 @@ const bedSchema = new mongoose.Schema(
       type: Number,
       required: true,
     },
-    bedType:{
+    bedType: {
       type: String,
-      enum:["single","double","suit"],
-      required:true,
+      enum: ["single", "double", "suit"],
+      required: true,
     },
     isAvailable: {
       type: Boolean,
       default: true,
+    },
+    isBooked: {
+      type: Boolean,
+      default: false,
     },
   },
   { timestamps: true }

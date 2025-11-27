@@ -1,14 +1,3 @@
-// // routes/adminRoutes.js
-// import express from "express";
-// import { getTotalUsers , getTotalBookings } from "../controller/adminController.js";
-
-// const router = express.Router();
-
-// // ✅ Route to get total user count
-// router.get("/total-users", getTotalUsers);
-// router.get("/total-bookings", getTotalBookings);
-
-// export default router;
 import express from "express";
 import Booking from "../models/bookingSchema.js";
 import User from "../models/userSchema.js";
@@ -116,6 +105,33 @@ router.get("/occupancy-rate", async (req, res) => {
     res.status(500).json({ message: "Error fetching occupancy rate" });
   }
 });
+
+/* ------------------ ⭐ MONTHLY BOOKINGS CHART DATA ------------------ */
+router.get("/monthly-bookings", async (req, res) => {
+  try {
+    const monthly = await Booking.aggregate([
+      {
+        $group: {
+          _id: { $month: "$createdAt" },
+          count: { $sum: 1 },
+        },
+      },
+      { $sort: { "_id": 1 } }
+    ]);
+
+    const monthNames = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
+
+    const formatted = monthNames.map((m, i) => {
+      const monthData = monthly.find((x) => x._id === i + 1);
+      return { month: m, bookings: monthData?.count || 0 };
+    });
+
+    res.json({ data: formatted });
+  } catch (err) {
+    res.status(500).json({ message: "Error fetching chart data" });
+  }
+});
+
 
 
 export default router;

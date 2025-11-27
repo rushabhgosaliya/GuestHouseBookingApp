@@ -7,12 +7,16 @@ import {
   deleteGuestHouse,
 } from "../controller/GuestHouseController.js";
 
+import { upload } from "../middleware/upload.js";
+
 const router = express.Router();
 
-router.post("/", createGuestHouse);
+// ⬅ NEW: use upload middleware
+router.post("/", upload.single("image"), createGuestHouse);
+router.put("/:id", upload.single("image"), updateGuestHouse);
+
 router.get("/", getAllGuestHouses);
 router.get("/:id", getGuestHouseById);
-router.put("/:id", updateGuestHouse);
 router.delete("/:id", deleteGuestHouse);
 
 export default router;

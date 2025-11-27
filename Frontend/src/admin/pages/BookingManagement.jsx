@@ -184,7 +184,7 @@ const BookingManagement = () => {
                 <td className="p-4 flex gap-3 justify-center">
                   <button
                     onClick={() => setSelectedBooking(b)}
-                    className="px-4 py-2 text-sm font-medium bg-blue-600 text-white rounded-lg shadow hover:bg-blue-700 hover:shadow-lg transition-all duration-200"
+                    className="px-2 py-2 text-sm font-medium bg-blue-600 text-white rounded-lg shadow hover:bg-blue-700 hover:shadow-lg transition-all duration-200"
                   >
                     View
                   </button>
@@ -193,14 +193,14 @@ const BookingManagement = () => {
                     <>
                       <button
                         onClick={() => handleStatusChange(b._id, "Approved")}
-                        className="px-4 py-2 text-sm font-medium bg-green-600 text-white rounded-lg shadow hover:bg-green-700 hover:shadow-lg transition-all duration-200"
+                        className="px-2 py-2 text-sm font-medium bg-green-600 text-white rounded-lg shadow hover:bg-green-700 hover:shadow-lg transition-all duration-200"
                       >
                         Approve
                       </button>
 
                       <button
                         onClick={() => handleStatusChange(b._id, "Rejected")}
-                        className="px-4 py-2 text-sm font-medium bg-red-600 text-white rounded-lg shadow hover:bg-red-700 hover:shadow-lg transition-all duration-200"
+                        className="px-2 py-2 text-sm font-medium bg-red-600 text-white rounded-lg shadow hover:bg-red-700 hover:shadow-lg transition-all duration-200"
                       >
                         Reject
                       </button>

@@ -132,6 +132,7 @@ export const getBedsByRoom = async (req, res) => {
 };
 
 // ✅ Add new bed
+// ✅ Add new bed
 export const addBed = async (req, res) => {
   try {
     const { roomId, bednumber, bedType, isAvailable } = req.body;
@@ -145,19 +146,26 @@ export const addBed = async (req, res) => {
 
     await newBed.save();
 
+    // ⭐ NEW: Populate room to get roomNumber
+    const populatedBed = await Bed.findById(newBed._id).populate(
+      "roomId",
+      "roomNumber"
+    );
+
     await logAction(
       req.user?._id,
       "Created",
       "Bed",
       newBed._id,
-      `Bed number ${newBed.bednumber} added to room ${newBed.roomId}`
+      `Bed number ${populatedBed.bednumber} added to room ${populatedBed.roomId?.roomNumber}`
     );
 
-    res.status(201).json({ message: "Bed added successfully", bed: newBed });
+    res.status(201).json({ message: "Bed added successfully", bed: populatedBed });
   } catch (error) {
     res.status(400).json({ message: "Error adding bed", error });
   }
 };
+
 
 
 // ✅ Update bed

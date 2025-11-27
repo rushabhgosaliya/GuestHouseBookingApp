@@ -29,6 +29,7 @@ export default function GuestHouseCard({ isLanding = false }) {
     fetchGuestHouses();
   }, []);
 
+
   return (
     <div
       className={
@@ -64,22 +65,22 @@ export default function GuestHouseCard({ isLanding = false }) {
               }`}
             >
               {/* 🖼️ Image */}
-              <div className="relative">
-                <img
-                  src={house.image_url}
-                  alt={house.guestHouseName}
-                  className={`w-full h-56 object-cover transition-opacity duration-300 ${
-                    house.underMaintenance ? "opacity-70" : "opacity-100"
-                  }`}
-                />
+             <div className="relative">
+  <img
+    src={`http://localhost:5000${house.image_url}`}
+    alt={house.guestHouseName}
+    className={`w-full h-56 object-cover transition-opacity duration-300 ${
+      house.underMaintenance ? "opacity-70" : "opacity-100"
+    }`}
+  />
 
-                {/* 🚧 Maintenance Badge */}
-                {house.underMaintenance && (
-                  <div className="absolute top-3 right-3 bg-red-600 text-white text-sm font-semibold px-3 py-1 rounded-full shadow-md">
-                    Under Maintenance
-                  </div>
-                )}
-              </div>
+  {house.underMaintenance && (
+    <div className="absolute top-3 right-3 bg-red-600 text-white text-sm font-semibold px-3 py-1 rounded-full shadow-md">
+      Under Maintenance
+    </div>
+  )}
+</div>
+
 
               {/* 🏠 Info Section */}
               <div className="p-6 text-center">

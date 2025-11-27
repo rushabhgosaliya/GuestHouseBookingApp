@@ -91,7 +91,7 @@ const UserNav = () => {
             <div className="p-2 rounded-lg bg-gradient-to-r">
               <img src="/logo.jpeg" width={"45px"} alt="Logo" />
             </div>
-            <span className="text-2xl font-bold text-gray-800 tracking-wide">
+            <span className="text-2xl font-bold text-blue-900 tracking-wide">
               Rishabh's Guest-House
             </span>
           </div>

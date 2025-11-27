@@ -3,7 +3,7 @@ import Bed from "../models/bedSchema.js";
 import Booking from "../models/bookingSchema.js";
 import mongoose from "mongoose";
 import { sendNewBookingEmails, sendBookingStatusEmail } from "../utils/sendMail.js";
-import { logAction } from "../utils/auditLogger.js";   // ✅ ADD THIS
+import { logAction } from "../utils/auditLogger.js";
 
 // 🟢 Fetch all rooms for a guest house
 export const getRoomsByGuestHouse = async (req, res) => {
@@ -32,13 +32,24 @@ export const createBooking = async (req, res) => {
   try {
     const booking = await Booking.create(req.body);
 
-    // ⬇️ Send response IMMEDIATELY (NO WAITING)
-    res.status(201).json({ 
-      message: "Booking created", 
-      bookingId: booking._id 
+    // ⭐ MAKE ROOM & BED BOOKED
+    await Room.findByIdAndUpdate(
+      req.body.roomId,
+      { isBooked: true, isAvailable: false }
+    );
+
+    await Bed.findByIdAndUpdate(
+      req.body.bedId,
+      { isBooked: true, isAvailable: false }
+    );
+
+    // Send immediate response
+    res.status(201).json({
+      message: "Booking created",
+      bookingId: booking._id
     });
 
-    // ⬇️ Run slow operations IN BACKGROUND
+    // Background tasks
     setImmediate(async () => {
       try {
         const populated = await Booking.findById(booking._id)
@@ -46,6 +57,7 @@ export const createBooking = async (req, res) => {
           .populate("guesthouseId", "guestHouseName");
 
         await sendNewBookingEmails(populated);
+
         await logAction(
           req.user?._id,
           "Created",
@@ -63,7 +75,6 @@ export const createBooking = async (req, res) => {
     res.status(500).json({ message: "Server error while creating booking" });
   }
 };
-
 
 // 🟡 Get all bookings (admin)
 export const getAllBookings = async (req, res) => {
@@ -140,10 +151,8 @@ export const updateBookingStatus = async (req, res) => {
       return res.status(404).json({ message: "Booking not found" });
     }
 
-    // Notify user
     await sendBookingStatusEmail(updated);
 
-    // 🟣 AUDIT LOG — BOOKING STATUS UPDATED
     await logAction(
       req.user?._id,
       "Updated",
@@ -168,7 +177,17 @@ export const deleteBooking = async (req, res) => {
     if (!deletedBooking)
       return res.status(404).json({ message: "Booking not found" });
 
-    // 🔴 AUDIT LOG — BOOKING DELETED
+    // ⭐ MAKE ROOM & BED AVAILABLE AGAIN
+    await Room.findByIdAndUpdate(
+      deletedBooking.roomId,
+      { isBooked: false, isAvailable: true }
+    );
+
+    await Bed.findByIdAndUpdate(
+      deletedBooking.bedId,
+      { isBooked: false, isAvailable: true }
+    );
+
     await logAction(
       req.user?._id,
       "Deleted",

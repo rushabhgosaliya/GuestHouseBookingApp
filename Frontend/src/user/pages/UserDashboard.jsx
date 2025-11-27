@@ -2,7 +2,7 @@ import React from "react";
 import GuestHouseCard from "../../user/components/GuestHouseCard";
 // import BookingForm from "../../user/pages/BookingForm";
 import Navbar from "../../user/components/Navbar";
-import { Footer } from "../components/Footer";
+import Footer from "../components/Footer";
 
 
 export default function UserDashboard() {

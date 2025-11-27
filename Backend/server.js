@@ -62,6 +62,10 @@ app.use("/api/bookings", bookingRoutes);
 
 app.use("/api/auditlogs", auditLogRoutes);
 
+app.use("/uploads", express.static("uploads"));
+
+
+
 // Start Server
 const PORT = process.env.PORT_NUMBER || 5000;
 app.listen(PORT, () => {

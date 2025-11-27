@@ -19,7 +19,6 @@ export default function LandingPage() {
 
   return (
     <div className="w-full min-h-screen bg-gradient-to-br from-gray-100 via-gray-300 to-gray-200 overflow-x-hidden">
-      
       {/* NAVBAR */}
       <LandingNavbar />
 
@@ -37,9 +36,8 @@ export default function LandingPage() {
 
         {/* CENTERED CONTENT */}
         <div className="relative z-10 max-w-4xl px-4 w-full flex flex-col items-center">
-          
           {/* Heading */}
-          <h1 className="text-4xl md:text-5xl font-extrabold text-white drop-shadow-2xl leading-tight">
+          <h1 className="text-3xl md:text-5xl font-extrabold text-white drop-shadow-2xl leading-tight whitespace-nowrap mt-10">
             Welcome to Rishabh's Guest House
           </h1>
 
@@ -52,7 +50,7 @@ export default function LandingPage() {
           <button
             onClick={handleBookNow}
             className="mt-10 w-full md:w-auto bg-white text-blue-800 px-10 py-4 rounded-xl 
-            font-semibold text-lg shadow-xl hover:bg-blue-700  hover:text-white transition-all duration-300"
+            font-semibold text-lg shadow-xl hover:bg-blue-800  hover:text-white transition-all duration-300"
           >
             Book Now
           </button>
@@ -69,9 +67,10 @@ export default function LandingPage() {
       </section>
 
       {/* FOOTER */}
-      <footer className="bg-white py-6 text-center shadow-inner border-t">
-        <p className="text-gray-600 font-medium">
-          © {new Date().getFullYear()} Rishabh's Guest-House. All Rights Reserved.
+      <footer className="bg-blue-900 py-5 text-center shadow-inner border-t border-blue-900">
+        <p className="text-white font-medium">
+          © {new Date().getFullYear()} Rishabh's Guest-House. All Rights
+          Reserved.
         </p>
       </footer>
     </div>

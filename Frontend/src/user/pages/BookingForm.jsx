@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import axios from "axios";
 import Navbar from "../../user/components/Navbar";
-import { Footer } from "../components/Footer";
+import Footer from "../components/Footer";
 import { X } from "lucide-react";
 
 const BookingForm = () => {
@@ -100,7 +100,7 @@ const BookingForm = () => {
     }
   }, []);
 
-  // ⭐ UPDATED — RESTRICT CHECKOUT DATE
+  // ⭐ Restrict checkout date
   const handleChange = (e) => {
     const { name, value } = e.target;
 
@@ -186,13 +186,7 @@ const BookingForm = () => {
       );
 
       if (res.status === 201) {
-
-        // ⭐ NEW: Signal to the admin page that a new booking has been created ⭐
-        // Setting an item in localStorage fires the 'storage' event in other tabs.
-        localStorage.setItem("newBookingCreated", Date.now()); 
-        
-        // You're already doing this for MyBookings, but this is a separate,
-        // dedicated key for the admin panel update.
+        localStorage.setItem("newBookingCreated", Date.now());
         localStorage.setItem("bookingUpdated", Date.now());
 
         setPopup({
@@ -223,33 +217,37 @@ const BookingForm = () => {
     <>
       <Navbar />
 
-      {/* ⭐ POPUP TOP-CENTER ⭐ */}
+      {/* POPUP */}
       {popup.visible && (
         <div className="fixed inset-0 bg-black/40 flex justify-center items-start pt-10 z-50">
           <div className="bg-white p-6 rounded-xl shadow-xl w-80 text-center animate-fadeInDown">
             {popup.type === "loading" && (
               <div className="flex flex-col items-center">
                 <div className="w-10 h-10 border-4 border-blue-600 border-t-transparent rounded-full animate-spin"></div>
-                <p className="mt-4 font-medium text-blue-700">{popup.message}</p>
+                <p className="mt-4 font-medium text-blue-700">
+                  {popup.message}
+                </p>
               </div>
             )}
 
             {popup.type === "success" && (
-              <p className="text-green-600 font-semibold text-lg">{popup.message}</p>
+              <p className="text-green-600 font-semibold text-lg">
+                {popup.message}
+              </p>
             )}
 
             {popup.type === "error" && (
-              <p className="text-red-600 font-semibold text-lg">{popup.message}</p>
+              <p className="text-red-600 font-semibold text-lg">
+                {popup.message}
+              </p>
             )}
           </div>
         </div>
       )}
 
-      {/* ===========================
-          FORM UI (UNCHANGED)
-      ============================ */}
+      {/* PAGE */}
       <div className="min-h-screen flex justify-center items-center bg-gradient-to-br from-[#F5F5F5] via-[#D5DBDB] to-[#E5E7EB] p-6">
-        <div className="relative bg-white w-full max-w-3xl p-10 rounded-2xl shadow-2xl border border-blue-200 overflow-hidden mt-18">
+        <div className="relative bg-white w-full max-w-4xl p-12 rounded-2xl shadow-2xl border border-blue-200 overflow-hidden mt-18">
           <button
             onClick={() => navigate(-1)}
             className="absolute top-4 right-4 text-blue-700 hover:text-red-600 transition"
@@ -262,15 +260,17 @@ const BookingForm = () => {
           </h2>
 
           <form onSubmit={handleSubmit}>
-            {/* STEP 1 */}
+            {/* ========== STEP 1 ========== */}
             {step === 1 && (
               <section className="space-y-6 animate-fadeIn">
-                <h3 className="text-xl font-semibold text-blue-700 mb-4 text-center">
+                <h3 className="text-xl font-semibold text-blue-700 mb-6 text-center">
                   Accommodation Details
                 </h3>
 
-                <div className="grid md:grid-cols-3 gap-6">
-                  <div>
+                {/* ⭐ WIDER INPUTS */}
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+
+                  <div className="w-full">
                     <label className="block mb-2 text-black text-sm">
                       Guest House
                     </label>
@@ -279,22 +279,29 @@ const BookingForm = () => {
                       name="guestHouse"
                       value={formData.guestHouse}
                       readOnly
-                      className="w-full p-3 border border-blue-400 rounded-lg bg-gray-100"
+                      className="w-full p-4 border border-blue-400 rounded-lg bg-gray-100 text-base shadow-sm"
                     />
                   </div>
 
-                  <div>
-                    <label className="block mb-2 text-black text-sm">Room</label>
+                  <div className="w-full">
+                    <label className="block mb-2 text-black text-sm">
+                      Room
+                    </label>
                     <select
                       name="room"
                       value={formData.room}
                       onChange={handleChange}
-                      className="w-full p-3 border border-blue-400 rounded-lg"
+                      className="w-full p-4 border border-blue-400 rounded-lg text-base shadow-sm"
                     >
                       <option value="">Select room</option>
                       {rooms.map((room) => (
-                        <option key={room._id} value={room._id}>
-                          Room No:- {room.roomNumber || room.roomId}
+                        <option
+                          key={room._id}
+                          value={room.isBooked ? "" : room._id}
+                          disabled={room.isBooked}
+                        >
+                          Room No:- {room.roomNumber}{" "}
+                          {room.isBooked ? "(Booked)" : ""}
                         </option>
                       ))}
                     </select>
@@ -303,18 +310,25 @@ const BookingForm = () => {
                     )}
                   </div>
 
-                  <div>
-                    <label className="block mb-2 text-black text-sm">Bed</label>
+                  <div className="w-full">
+                    <label className="block mb-2 text-black text-sm">
+                      Bed
+                    </label>
                     <select
                       name="bed"
                       value={formData.bed}
                       onChange={handleChange}
-                      className="w-full p-3 border border-blue-400 rounded-lg"
+                      className="w-full p-4 border border-blue-400 rounded-lg text-base shadow-sm"
                     >
                       <option value="">Select bed</option>
                       {beds.map((bed) => (
-                        <option key={bed._id} value={bed._id}>
-                          Bed No:- {bed.bednumber || bed.bedId}
+                        <option
+                          key={bed._id}
+                          value={bed.isBooked ? "" : bed._id}
+                          disabled={bed.isBooked}
+                        >
+                          Bed No:- {bed.bednumber}{" "}
+                          {bed.isBooked ? "(Booked)" : ""}
                         </option>
                       ))}
                     </select>
@@ -322,11 +336,12 @@ const BookingForm = () => {
                       <p className="text-red-500 text-sm">{errors.bed}</p>
                     )}
                   </div>
+
                 </div>
               </section>
             )}
 
-            {/* STEP 2 */}
+            {/* ========== STEP 2 ========== */}
             {step === 2 && (
               <section className="space-y-6 animate-fadeIn">
                 <h3 className="text-xl font-semibold text-blue-700 mb-4 text-center">
@@ -343,7 +358,7 @@ const BookingForm = () => {
                       name="checkIn"
                       value={formData.checkIn}
                       onChange={handleChange}
-                      className="w-full p-3 border border-blue-400 rounded-lg"
+                      className="w-full p-4 border border-blue-400 rounded-lg"
                     />
                     {errors.checkIn && (
                       <p className="text-red-500 text-sm">{errors.checkIn}</p>
@@ -358,9 +373,9 @@ const BookingForm = () => {
                       type="date"
                       name="checkOut"
                       value={formData.checkOut}
-                      min={formData.minCheckOut} 
+                      min={formData.minCheckOut}
                       onChange={handleChange}
-                      className="w-full p-3 border border-blue-400 rounded-lg"
+                      className="w-full p-4 border border-blue-400 rounded-lg"
                     />
                     {errors.checkOut && (
                       <p className="text-red-500 text-sm">{errors.checkOut}</p>
@@ -370,7 +385,7 @@ const BookingForm = () => {
               </section>
             )}
 
-            {/* STEP 3 */}
+            {/* ========== STEP 3 ========== */}
             {step === 3 && (
               <section className="space-y-6 animate-fadeIn">
                 <h3 className="text-xl font-semibold text-blue-700 mb-4 text-center">
@@ -387,7 +402,7 @@ const BookingForm = () => {
                       name="fullName"
                       value={formData.fullName}
                       readOnly
-                      className="w-full p-3 border border-blue-400 rounded-lg bg-gray-100"
+                      className="w-full p-4 border border-blue-400 rounded-lg bg-gray-100"
                     />
                     {errors.fullName && (
                       <p className="text-red-500 text-sm">{errors.fullName}</p>
@@ -403,7 +418,7 @@ const BookingForm = () => {
                       name="email"
                       value={formData.email}
                       readOnly
-                      className="w-full p-3 border border-blue-400 rounded-lg bg-gray-100"
+                      className="w-full p-4 border border-blue-400 rounded-lg bg-gray-100"
                     />
                     {errors.email && (
                       <p className="text-red-500 text-sm">{errors.email}</p>
@@ -419,7 +434,7 @@ const BookingForm = () => {
                       name="phone"
                       value={formData.phone}
                       readOnly
-                      className="w-full p-3 border border-blue-400 rounded-lg bg-gray-100"
+                      className="w-full p-4 border border-blue-400 rounded-lg bg-gray-100"
                     />
                     {errors.phone && (
                       <p className="text-red-500 text-sm">{errors.phone}</p>
@@ -437,7 +452,7 @@ const BookingForm = () => {
                     onChange={handleChange}
                     rows="2"
                     placeholder="Any special requests..."
-                    className="w-full p-3 border border-blue-400 rounded-lg resize-none"
+                    className="w-full p-4 border border-blue-400 rounded-lg resize-none"
                   ></textarea>
                 </div>
               </section>
@@ -476,7 +491,7 @@ const BookingForm = () => {
               )}
             </div>
 
-            {/* PROGRESS BAR */}
+            {/* STEP PROGRESS */}
             <div className="mt-12">
               <div className="flex justify-center items-center mb-3 relative">
                 <div className="absolute w-2/3 h-[2px] bg-blue-200 top-1/2 -translate-y-1/2"></div>
@@ -497,13 +512,19 @@ const BookingForm = () => {
               </div>
 
               <div className="flex justify-center text-sm text-gray-600 font-medium space-x-16">
-                <span className={step >= 1 ? "text-blue-700 font-semibold" : ""}>
+                <span
+                  className={step >= 1 ? "text-blue-700 font-semibold" : ""}
+                >
                   Accommodation
                 </span>
-                <span className={step >= 2 ? "text-blue-700 font-semibold" : ""}>
+                <span
+                  className={step >= 2 ? "text-blue-700 font-semibold" : ""}
+                >
                   Dates
                 </span>
-                <span className={step >= 3 ? "text-blue-700 font-semibold" : ""}>
+                <span
+                  className={step >= 3 ? "text-blue-700 font-semibold" : ""}
+                >
                   Personal Info
                 </span>
               </div>
@@ -518,4 +539,3 @@ const BookingForm = () => {
 };
 
 export default BookingForm;
-

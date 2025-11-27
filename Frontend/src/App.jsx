@@ -13,7 +13,6 @@ import Profile from "./user/pages/Profile";
 import MyBookings from "./user/pages/MyBookings";
 import LandingPage from "./user/pages/Index";
 
-
 export default function App() {
   return (
     <Routes>
@@ -22,13 +21,9 @@ export default function App() {
       <Route path="/login" element={<Login />} />
       <Route path="/register" element={<Register />} />
       <Route path="/forgot-password" element={<ForgotPassword />} />
-      <Route path="/reset-password/:token" element={<ResetPassword />} />
-      <Route path="/index" element={<LandingPage/>} />
-      <Route path="/profile" element={<Profile />} />
-      
-      
-
-
+      {/* <Route path="/reset-password/:token" element={<ResetPassword />} /> */}
+      <Route path="/index" element={<LandingPage />} />
+      {/* <Route path="/profile" element={<Profile />} /> */}
       {/* Protected Routes */}
       <Route
         path="/dashboard"
@@ -54,11 +49,23 @@ export default function App() {
           </ProtectedRoute>
         }
       />
-
-    
-     <Route path="/admin/*" element={<AdminDashboard />} />
-
-
+      <Route
+        path="/profile"
+        element={
+          <ProtectedRoute>
+            <Profile />
+          </ProtectedRoute>
+        }
+      />
+       <Route
+        path="/reset-password/:token"
+        element={
+          <ProtectedRoute>
+            <ResetPassword/>
+          </ProtectedRoute>
+        }
+      />
+      <Route path="/admin/*" element={<AdminDashboard />} />
     </Routes>
   );
 }

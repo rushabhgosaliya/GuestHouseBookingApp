@@ -28,10 +28,10 @@ const roomSchema = new mongoose.Schema(
       type: Number,
       required: true,
     },
-    // image_url: {
-    //   type: String,
-    //   required: true,
-    // },
+    isBooked: {
+      type: Boolean,
+      default: false,
+    },
     isAvailable: {
       type: Boolean,
       default: true,
