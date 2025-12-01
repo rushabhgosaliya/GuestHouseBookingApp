@@ -23,7 +23,7 @@ const MyBookings = () => {
     try {
       const storedUser = JSON.parse(localStorage.getItem("user"));
       if (!storedUser || !storedUser._id) {
-        alert("⚠️ Please log in to view your bookings.");
+        alert(" Please log in to view your bookings.");
         navigate("/login");
         return;
       }
@@ -42,11 +42,11 @@ const MyBookings = () => {
   useEffect(() => {
     loadBookings();
 
-    // 🔥 Auto refresh when admin updates booking status
+    //  Auto refresh when admin updates booking status
     const autoRefresh = () => loadBookings();
     window.addEventListener("storage", autoRefresh);
 
-    // 🔥 Auto refresh every 5 seconds
+    //  Auto refresh every 5 seconds
     const interval = setInterval(() => {
       loadBookings();
     }, 5000);
@@ -84,7 +84,7 @@ const MyBookings = () => {
         <Navbar />
         <div className="min-h-screen flex flex-col justify-center items-center bg-gradient-to-br from-gray-100 to-blue-100">
           <h2 className="text-3xl font-semibold text-gray-700 mb-4">
-            No Bookings Found 😕
+            No Bookings Found 
           </h2>
           <button
             onClick={() => navigate("/dashboard")}

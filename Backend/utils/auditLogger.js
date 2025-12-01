@@ -13,7 +13,7 @@ import AuditLog from "../models/auditlogSchema.js";
  */
 export const logAction = async (userId, action, entityType, entityId, details = "") => {
   try {
-    const dummyId = "000000000000000000000000"; // fallback ObjectId
+    const dummyId = "000000000000000000000000"; 
 
     const finalUserId =
       userId && mongoose.Types.ObjectId.isValid(String(userId)) ? String(userId) : dummyId;
@@ -29,6 +29,6 @@ export const logAction = async (userId, action, entityType, entityId, details = 
       details,
     });
   } catch (err) {
-    console.error("❌ Error saving audit log:", err?.message || err);
+    console.error("Error saving audit log:", err?.message || err);
   }
 };

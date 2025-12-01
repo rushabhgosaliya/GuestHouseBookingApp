@@ -1,13 +1,12 @@
 import mongoose from "mongoose";
 import AutoIncrementFactory from "mongoose-sequence";
-
-const connection = mongoose.connection; // use existing mongoose connection
+const connection = mongoose.connection; 
 const AutoIncrement = AutoIncrementFactory(connection);
 
 const guesthouseSchema = new mongoose.Schema(
   {
     guesthouseId: {
-      type: Number, // now it's a number for auto increment
+      type: Number,
       unique: true,
     },
     guestHouseName: {
@@ -33,7 +32,7 @@ const guesthouseSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
-// ✅ Auto-increment plugin for guesthouseId
+// Auto-increment plugin for guesthouseId
 guesthouseSchema.plugin(AutoIncrement, { inc_field: "guesthouseId" });
 
 export default mongoose.model("GuestHouse", guesthouseSchema);

@@ -1,4 +1,3 @@
-// src/ProtectedRoute.jsx
 import {React} from "react";
 import { Navigate, replace } from "react-router-dom";
 

@@ -12,7 +12,7 @@ export default function GuestHouseCard({ isLanding = false }) {
     navigate("/bookingform", { state: { guestHouseId: id } });
   };
 
-  // ✅ Fetch dynamic guesthouses from backend
+  //  Fetch dynamic guesthouses from backend
   const fetchGuestHouses = async () => {
     try {
       setLoading(true);
@@ -50,7 +50,7 @@ export default function GuestHouseCard({ isLanding = false }) {
         </h2>
       )}
 
-      {/* 🕒 Loading / Empty States */}
+      {/*  Loading / Empty States */}
       {loading ? (
         <p className="text-gray-700 text-lg font-medium">Loading guest houses...</p>
       ) : guestHouses.length === 0 ? (
@@ -64,7 +64,7 @@ export default function GuestHouseCard({ isLanding = false }) {
                 house.underMaintenance ? "maintenance" : "available"
               }`}
             >
-              {/* 🖼️ Image */}
+              {/*  Image */}
              <div className="relative">
   <img
     src={`http://localhost:5000${house.image_url}`}
@@ -82,27 +82,27 @@ export default function GuestHouseCard({ isLanding = false }) {
 </div>
 
 
-              {/* 🏠 Info Section */}
+              {/*  Info Section */}
               <div className="p-6 text-center">
-                {/* 🏡 Name */}
+                {/*  Name */}
                 <h3 className="text-2xl font-bold text-gray-800 mb-2">
                   {house.guestHouseName}
                 </h3>
 
-                {/* 📍 Location */}
+                {/*  Location */}
                 <p className="flex items-center justify-center text-gray-700 font-medium mb-3">
                   <FaMapMarkerAlt className="text-blue-600 mr-2" />
                   {house.location?.city || "N/A"}, {house.location?.state || ""}
                 </p>
 
-                {/* 📝 Description */}
+                {/*  Description */}
                 <p className="text-gray-600 text-sm mb-5">
                   {house.description?.length > 100
                     ? `${house.description.slice(0, 100)}...`
                     : house.description || "No description available."}
                 </p>
 
-                {/* 🟦 Book Button */}
+                {/*  Book Button */}
                 {/* <button
                   onClick={() => handleClick(house._id)}
                   disabled={house.underMaintenance}
@@ -115,7 +115,7 @@ export default function GuestHouseCard({ isLanding = false }) {
                   {house.underMaintenance ? "Unavailable" : "Book Now"}
                 </button> */}
 
-                {/* 🟦 Book Button */}
+                {/* Book Button */}
 <button
   onClick={() => {
     const user = localStorage.getItem("user");

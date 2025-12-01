@@ -8,9 +8,9 @@ import {
 
 const router = express.Router();
 
-router.post("/", createAuditLog); // ➕ Create
-router.get("/", getAllAuditLogs); // 📜 Read all
-router.get("/:id", getAuditLogById); // 🔍 Read single
-router.delete("/:id", deleteAuditLog); // 🗑️ Delete
+router.post("/", createAuditLog); 
+router.get("/", getAllAuditLogs); 
+router.get("/:id", getAuditLogById); 
+router.delete("/:id", deleteAuditLog);
 
 export default router;

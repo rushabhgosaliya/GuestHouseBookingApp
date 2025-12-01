@@ -1,5 +1,3 @@
-// Simple browser-safe event bus
-
 const eventBus = {
   events: {},
 

@@ -75,7 +75,7 @@ const BookingManagement = () => {
         status: backendStatus,
       });
 
-      // 🔥 INSTANT TOAST (FAST)
+      //  INSTANT TOAST (FAST)
       toast.success(
         newStatus === "Approved"
           ? "Booking approved successfully! ✅"

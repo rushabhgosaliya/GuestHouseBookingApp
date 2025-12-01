@@ -9,7 +9,6 @@ import {
   Bed,
 } from "lucide-react";
 
-// ⭐ Recharts Imports
 import {
   LineChart,
   Line,
@@ -63,7 +62,7 @@ const Dashboard = () => {
       const occRes = await fetch("http://localhost:5000/api/admin/occupancy-rate");
       setOccupancyRate((await occRes.json()).occupancyRate);
 
-      // ⭐ Fetch chart data
+      //  Fetch chart data
       const chartRes = await fetch("http://localhost:5000/api/admin/monthly-bookings");
       setMonthlyChart((await chartRes.json()).data);
 
@@ -132,7 +131,7 @@ const Dashboard = () => {
           <Card title="Today's Booking" value={todaysBookings} icon={Bed} />
         </div>
 
-        {/* ⭐ CHARTS SECTION */}
+        {/*  CHARTS SECTION */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 mt-14">
 
           {/* LINE CHART */}

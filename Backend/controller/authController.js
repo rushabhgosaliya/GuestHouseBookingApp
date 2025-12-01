@@ -29,7 +29,6 @@ export const registerUser = async (req, res) => {
 
     await user.save();
 
-    // 🚀 Email runs in background (no more 5 sec delay)
     sendWelcomeEmail(user).catch((err) =>
       console.error("Email sending failed:", err)
     );
@@ -61,7 +60,7 @@ export const loginUser = async (req, res) => {
     const user = await User.findOne({ email });
     if (!user) return res.status(400).json({ message: "Invalid credentials" });
 
-    // ❌ Block inactive users
+    //  Block inactive users
     if (!user.isActive) {
       return res.status(403).json({
         message: "Your account is inactive. Please contact the administrator."

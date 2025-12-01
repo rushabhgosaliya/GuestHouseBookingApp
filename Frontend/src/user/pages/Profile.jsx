@@ -79,7 +79,7 @@ const Profile = () => {
   };
 
   const handleChangePassword = async () => {
-    // ⭐ VALIDATION
+    //  VALIDATION
     if (!passwordData.oldPassword.trim()) {
       toast.warning("Old password is required");
       return;

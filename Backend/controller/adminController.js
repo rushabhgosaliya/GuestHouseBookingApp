@@ -1,8 +1,7 @@
-// controllers/adminController.js
 import User from "../models/userSchema.js";
 import Booking from "../models/bookingSchema.js"; 
 
-// ✅ Controller to get total users count
+// Controller to get total users count
 export const getTotalUsers = async (req, res) => {
   try {
     const totalUsers = await User.countDocuments();
@@ -13,7 +12,7 @@ export const getTotalUsers = async (req, res) => {
   }
 };
 
-// ✅ NEW: Get Total Bookings
+// NEW: Get Total Bookings
 export const getTotalBookings = async (req, res) => {
   try {
     const totalBookings = await Booking.countDocuments();

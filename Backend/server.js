@@ -28,10 +28,10 @@ app.use(express.json());
 
 app.use(cors())
 
-// ✅ Register routes
+// Register routes
 // app.use("/api/users", router);
 
-app.use("/api/auth", arouter);   // ✅ change here from /api/users → /api/auth
+app.use("/api/auth", arouter);   
 
 
 // Homepage Route

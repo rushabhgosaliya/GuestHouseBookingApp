@@ -12,7 +12,7 @@ const UserNav = () => {
   const location = useLocation();
   const navigate = useNavigate();
 
-  // 🧠 Extract name helper
+  //  Extract name helper
   const extractName = (raw) => {
     if (!raw) return "User";
     if (typeof raw === "string") {
@@ -29,7 +29,7 @@ const UserNav = () => {
     return "User";
   };
 
-  // 🧠 Load user info from localStorage
+  //  Load user info from localStorage
   const loadUserFromStorage = () => {
     const storedUser = localStorage.getItem("user");
     if (storedUser) {
@@ -57,24 +57,24 @@ const UserNav = () => {
     navigate("/login");
   };
 
-  // ✅ Navigation items
+  //  Navigation items
   const navItems = [
     { name: "View Guest Houses", icon: MdOutlineHome, link: "/dashboard" },
     { name: "My Bookings", icon: FiBookOpen, link: "/mybookings" },
     { name: "Profile", icon: FaUserCircle, link: "/profile" },
   ];
 
-  // ✅ Active detection
+  //  Active detection
   const isActiveTab = (item) => location.pathname.startsWith(item.link);
 
-  // ✅ Handle menu click
+  //  Handle menu click
   const handleNavClick = (e, item) => {
     e.preventDefault();
     navigate(item.link);
     setIsMenuOpen(false);
   };
 
-  // ✅ Filter for admin (optional)
+  //  Filter for admin (optional)
   const filteredNavItems =
     userRole === "admin"
       ? navItems.filter((item) => item.name === "Profile")
@@ -84,7 +84,7 @@ const UserNav = () => {
     <nav className="w-screen fixed top-0 left-0 bg-white text-gray-800 shadow-md z-50">
       <div className="max-w-7xl mx-auto">
         <div className="flex justify-between items-center h-20 px-6">
-          {/* 🌟 Logo */}
+          {/*  Logo */}
 
           {/* 1st container */}
           <div className="flex items-center space-x-3">
@@ -96,7 +96,7 @@ const UserNav = () => {
             </span>
           </div>
 
-          {/* 🍔 Mobile Menu Toggle */}
+          {/*  Mobile Menu Toggle */}
           <button
             onClick={() => setIsMenuOpen(!isMenuOpen)}
             className="md:hidden text-3xl text-gray-700 focus:outline-none"
@@ -104,7 +104,7 @@ const UserNav = () => {
             {isMenuOpen ? <HiX /> : <HiMenuAlt3 />}
           </button>
 
-          {/* 🔗 Desktop Navigation */}
+          {/*  Desktop Navigation */}
           <div className="hidden md:flex items-center space-x-8">
             {filteredNavItems.map((item) => {
               const Icon = item.icon;
@@ -126,7 +126,7 @@ const UserNav = () => {
             })}
           </div>
 
-          {/* 👤 User & Logout */}
+          {/*  User & Logout */}
           <div className="hidden md:flex items-center space-x-5">
             <p className="text-base text-gray-700 font-semibold">
               Hello,&nbsp;
@@ -143,7 +143,7 @@ const UserNav = () => {
           </div>
         </div>
 
-        {/* 📱 Mobile Menu */}
+        {/*  Mobile Menu */}
         {isMenuOpen && (
           <div className="md:hidden bg-white border-t border-gray-200 pb-4">
             <div className="flex flex-col items-start px-4 space-y-4 mt-2">

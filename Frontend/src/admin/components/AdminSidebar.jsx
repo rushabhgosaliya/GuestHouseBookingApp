@@ -9,7 +9,7 @@ import {
   MdAssignment,
   MdMenu,
   MdClose,
-  MdPeople, // 👈 Added icon for User Management
+  MdPeople,
 } from "react-icons/md";
 
 const AdminSidebar = () => {
@@ -30,7 +30,7 @@ const AdminSidebar = () => {
       path: "/admin/bookings",
     },
     {
-      name: "User Management", // 👈 New menu item added here
+      name: "User Management", 
       icon: <MdPeople size={20} />,
       path: "/admin/users",
     },

@@ -1,117 +1,3 @@
-// import User from "../models/userSchema.js";
-// import { logAction } from "../utils/auditLogger.js";  // ✅ Add audit logger import
-
-// // ✅ Get all users
-// export const getAllUsers = async (req, res) => {
-//   try {
-//     const users = await User.find();
-
-//     // Always return address as { line1: "" }
-//     const formatted = users.map((u) => ({
-//       ...u._doc,
-//       address:
-//         typeof u.address === "string"
-//           ? { line1: u.address }
-//           : u.address || { line1: "" },
-//     }));
-
-//     res.status(200).json({ users: formatted });
-//   } catch (error) {
-//     console.error("Error fetching users:", error);
-//     res.status(500).json({ message: "Server error" });
-//   }
-// };
-
-// // ✅ Add new user
-// export const addUser = async (req, res) => {
-//   try {
-//     const newUser = new User(req.body);
-//     await newUser.save();
-
-//     // 🟢 AUDIT LOG — USER CREATED
-//     await logAction(
-//       req.user?._id,
-//       "Created",
-//       "User",
-//       newUser._id,
-//       `User ${newUser.firstName} ${newUser.lastName} created`
-//     );
-
-//     res.status(201).json({
-//       message: "User created successfully",
-//       user: newUser,
-//     });
-//   } catch (error) {
-//     console.error("Error creating user:", error);
-//     res.status(500).json({ message: "Error creating user", error });
-//   }
-// };
-
-// // ✅ Update user
-// export const updateUser = async (req, res) => {
-//   try {
-//     const { id } = req.params;
-
-//     const updatedUser = await User.findByIdAndUpdate(id, req.body, {
-//       new: true,
-//     });
-
-//     // 🟢 AUDIT LOG — USER UPDATED
-//     await logAction(
-//       req.user?._id,
-//       "Updated",
-//       "User",
-//       updatedUser?._id,
-//       `User ${updatedUser?.firstName} ${updatedUser?.lastName} updated`
-//     );
-
-//     res.status(200).json({
-//       message: "User updated successfully",
-//       user: updatedUser,
-//     });
-//   } catch (error) {
-//     console.error("Error updating user:", error);
-//     res.status(500).json({ message: "Error updating user", error });
-//   }
-// };
-
-// export const deleteUser = async (req, res) => {
-//   try {
-//     const updatedUser = await User.findByIdAndUpdate(
-//       req.params.id,
-//       { isActive: false },
-//       { new: true }
-//     );
-
-//     // 🟢 AUDIT LOG — USER DELETED
-//     await logAction(
-//       req.user?._id,
-//       "Deleted",
-//       "User",
-//       deletedUser?._id,
-//       `User ${deletedUser?.firstName} ${deletedUser?.lastName} deleted`
-//     );
-
-//     res.status(200).json({ message: "User deactivated", user: updatedUser });
-//   } catch (error) {
-//     res.status(500).json({ message: "Error deactivating user" });
-//   }
-// };
-
-// // ⭐ ACTIVATE USER – set isActive = true
-// export const activateUser = async (req, res) => {
-//   try {
-//     const updatedUser = await User.findByIdAndUpdate(
-//       req.params.id,
-//       { isActive: true },
-//       { new: true }
-//     );
-
-//     res.status(200).json({ message: "User activated", user: updatedUser });
-//   } catch (error) {
-//     res.status(500).json({ message: "Error activating user" });
-//   }
-// };
 import User from "../models/userSchema.js";
 import { logAction } from "../utils/auditLogger.js";
 import bcrypt from "bcryptjs";
@@ -176,7 +62,7 @@ export const updateUser = async (req, res) => {
   }
 };
 
-// ⭐ Soft Delete (Deactivate)
+//  Soft Delete (Deactivate)
 export const deleteUser = async (req, res) => {
   try {
     const updatedUser = await User.findByIdAndUpdate(
@@ -204,7 +90,7 @@ export const deleteUser = async (req, res) => {
   }
 };
 
-// ⭐ Activate User
+//  Activate User
 export const activateUser = async (req, res) => {
   try {
     const updatedUser = await User.findByIdAndUpdate(

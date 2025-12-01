@@ -20,11 +20,11 @@ const auditLogSchema = new mongoose.Schema(
       required: true,
     },
     entityType: {
-      type: String, // e.g. GuestHouse, Room, Bed, User
+      type: String, 
       required: true,
     },
     entityId: {
-      type: mongoose.Schema.Types.ObjectId, // reference to the modified entity
+      type: mongoose.Schema.Types.ObjectId, 
       required: true,
     },
     details: {
@@ -34,7 +34,7 @@ const auditLogSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
-// ✅ Auto-increment for auditId
+//  Auto-increment for auditId
 auditLogSchema.plugin(AutoIncrement, { inc_field: "auditId" });
 
 export default mongoose.model("AuditLog", auditLogSchema);

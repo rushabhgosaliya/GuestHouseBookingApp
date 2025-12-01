@@ -1,4 +1,3 @@
-// controllers/updateuser.js
 import User from "../models/userSchema.js";
 
 export const updateUser = async (req, res) => {

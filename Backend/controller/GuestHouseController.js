@@ -1,13 +1,13 @@
 import GuestHouse from "../models/guesthouseSchema.js";
 import { logAction } from "../utils/auditLogger.js";
 
-// 🟢 Create a new Guest House
+//  Create a new Guest House
 
 export const createGuestHouse = async (req, res) => {
   try {
     const { guestHouseName, description, image_url, underMaintenance, userId } = req.body;
 
-    // ⭐ FIX: Parse location string
+    //  FIX: Parse location string
     let parsedLocation = {};
     if (req.body.location) {
       try {
@@ -29,7 +29,7 @@ export const createGuestHouse = async (req, res) => {
 
     const newGuestHouse = new GuestHouse({
       guestHouseName,
-      location: parsedLocation,   // ⭐ FIXED ⭐
+      location: parsedLocation,  
       description,
       image_url: finalImageUrl,
       underMaintenance,
@@ -49,7 +49,7 @@ export const createGuestHouse = async (req, res) => {
 
 
 
-// 🟡 Get all Guest Houses
+//  Get all Guest Houses
 export const getAllGuestHouses = async (req, res) => {
   try {
     const guesthouses = await GuestHouse.find();
@@ -60,7 +60,7 @@ export const getAllGuestHouses = async (req, res) => {
   }
 };
 
-// 🟠 Get Guest House by ID
+//  Get Guest House by ID
 export const getGuestHouseById = async (req, res) => {
   try {
     const guesthouse = await GuestHouse.findById(req.params.id);
@@ -74,15 +74,15 @@ export const getGuestHouseById = async (req, res) => {
   }
 };
 
-// 🔵 Update Guest House
+//  Update Guest House
 export const updateGuestHouse = async (req, res) => {
   try {
     const userId =
       req.user?._id || req.body?.userId || req.query?.userId || null;
 
     let updatedData = req.body;
-
-    // ⭐ FIX: Parse location if it was sent as JSON string
+    
+    //  FIX: Parse location if it was sent as JSON string
     if (req.body.location) {
       try {
         updatedData.location = JSON.parse(req.body.location);
@@ -125,7 +125,7 @@ export const updateGuestHouse = async (req, res) => {
 
 
 
-// 🔴 Delete Guest House
+//  Delete Guest House
 export const deleteGuestHouse = async (req, res) => {
   try {
     const userId = req.user?._id || req.body?.userId || req.query?.userId || null;
@@ -136,7 +136,7 @@ export const deleteGuestHouse = async (req, res) => {
       return res.status(404).json({ message: "Guest house not found" });
     }
 
-    // 🧾 Log deletion
+    //  Log deletion
     await logAction(
       userId,
       "Deleted",

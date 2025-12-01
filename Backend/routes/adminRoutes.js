@@ -2,7 +2,7 @@ import express from "express";
 import Booking from "../models/bookingSchema.js";
 import User from "../models/userSchema.js";
 import GuestHouse from "../models/guesthouseSchema.js";
-import Bed from "../models/bedSchema.js"; // ⭐ NEW IMPORT
+import Bed from "../models/bedSchema.js"; 
 
 const router = express.Router();
 

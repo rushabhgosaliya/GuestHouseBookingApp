@@ -11,7 +11,7 @@ import { upload } from "../middleware/upload.js";
 
 const router = express.Router();
 
-// ⬅ NEW: use upload middleware
+//  use upload middleware
 router.post("/", upload.single("image"), createGuestHouse);
 router.put("/:id", upload.single("image"), updateGuestHouse);
 
