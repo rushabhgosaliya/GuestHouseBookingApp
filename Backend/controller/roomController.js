@@ -4,6 +4,22 @@ import { updateRoomAvailability, isRoomAvailable } from "../utils/availabilityHe
 
 export const createRoom = async (req, res) => {
   try {
+    const { guesthouseId, roomNumber } = req.body;
+
+    if (!guesthouseId || roomNumber === undefined || roomNumber === null) {
+      return res.status(400).json({
+        message: "guesthouseId and roomNumber are required",
+      });
+    }
+
+    // ❗ Prevent duplicate room number inside the same guest house
+    const existingRoom = await Room.findOne({ guesthouseId, roomNumber });
+    if (existingRoom) {
+      return res.status(400).json({
+        message: `Room number ${roomNumber} already exists for this guest house.`,
+      });
+    }
+
     const newRoom = new Room(req.body);
     const savedRoom = await newRoom.save();
 
@@ -103,12 +119,34 @@ export const getRoomById = async (req, res) => {
 
 export const updateRoom = async (req, res) => {
   try {
-    const updateRoom = await Room.findByIdAndUpdate(req.params.id, req.body, {
+    const roomId = req.params.id;
+    const existing = await Room.findById(roomId);
+    if (!existing) return res.status(404).json({ message: "Room not Found" });
+
+    // Determine the target guesthouseId and roomNumber after update
+    const targetGuesthouseId = req.body.guesthouseId || existing.guesthouseId;
+    const targetRoomNumber =
+      req.body.roomNumber !== undefined && req.body.roomNumber !== null
+        ? req.body.roomNumber
+        : existing.roomNumber;
+
+    // ❗ Prevent changing to a duplicate room number within the same guest house
+    const conflict = await Room.findOne({
+      _id: { $ne: roomId },
+      guesthouseId: targetGuesthouseId,
+      roomNumber: targetRoomNumber,
+    });
+
+    if (conflict) {
+      return res.status(400).json({
+        message: `Room number ${targetRoomNumber} already exists for this guest house.`,
+      });
+    }
+
+    const updateRoom = await Room.findByIdAndUpdate(roomId, req.body, {
       new: true,
       runValidators: true,
     });
-
-    if (!updateRoom) return res.status(404).json({ message: "Room not Found" });
 
     //  AUDIT LOG: ROOM UPDATED
     await logAction(

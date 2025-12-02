@@ -9,6 +9,8 @@ import {
 } from "lucide-react";
 import { PlusCircle } from "lucide-react";
 import axios from "axios";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const BedManagement = () => {
   const [beds, setBeds] = useState([]);
@@ -83,7 +85,9 @@ const BedManagement = () => {
       fetchBeds();
     } catch (error) {
       console.error("Error saving bed:", error.response?.data || error.message);
-      alert(error.response?.data?.message || "Error saving bed. Try again.");
+      // alert(error.response?.data?.message || "Error saving bed. Try again.");
+      toast.error(error.response?.data?.message || "Error saving bed. Try again.");
+      
     }
   };
 

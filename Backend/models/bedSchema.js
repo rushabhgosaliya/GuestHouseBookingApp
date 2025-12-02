@@ -28,4 +28,8 @@ const bedSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
+// Ensure that the same bed number cannot be reused within the same room
+// One room → many beds, but each bednumber must be unique per roomId
+bedSchema.index({ roomId: 1, bednumber: 1 }, { unique: true });
+
 export default mongoose.model("bed", bedSchema);

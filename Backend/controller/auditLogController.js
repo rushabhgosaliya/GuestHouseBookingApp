@@ -14,7 +14,7 @@ export const createAuditLog = async (req, res) => {
 
     const savedLog = await auditLog.save();
     res.status(201).json({
-      message: "✅ Audit log created successfully",
+      message: "Audit log created successfully",
       data: savedLog,
     });
   } catch (error) {
