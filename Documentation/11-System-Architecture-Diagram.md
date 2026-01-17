@@ -272,3 +272,4 @@ Audit logs for security and traceability
 - The overall workflows (auth, RBAC, booking, email, stats) are consistently implemented across this structure.
 
 
+

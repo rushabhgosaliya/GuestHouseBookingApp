@@ -258,3 +258,4 @@ You can easily add more email types using the same pattern:
 - Email operations are non-blocking and robust, so booking flows remain reliable even if email delivery occasionally fails.
 
 
+
